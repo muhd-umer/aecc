@@ -1,0 +1,27 @@
+name: vtcc
+channels:
+    - conda-forge
+    - defaults
+dependencies:
+    - python=3.10
+    - pip
+    - cython
+    - ipython
+    - jupyter
+    - jupyterlab
+    - matplotlib
+    - pandas
+    - scikit-learn
+    - scikit-image
+    - seaborn
+    - tqdm
+    - opencv
+    - librosa
+    - pip:
+        - scipy
+        - tensorboard
+        - graphviz
+        - torchview
+
+# do the following separately in a terminal:
+# pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
