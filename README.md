@@ -1,4 +1,4 @@
-# Vision-Transformer Enabled Communication Compression (VTCC)
+# VTCC
 
 
 ## Installation
