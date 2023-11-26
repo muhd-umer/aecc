@@ -1,4 +1,4 @@
-name: vtcc
+name: vitcc
 channels:
     - conda-forge
     - defaults
@@ -17,11 +17,4 @@ dependencies:
     - tqdm
     - opencv
     - librosa
-    - pip:
-        - scipy
-        - tensorboard
-        - graphviz
-        - torchview
-
-# do the following separately in a terminal:
-# pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+    - scipy
