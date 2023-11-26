@@ -157,4 +157,63 @@ cython_debug/
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
+.idea/
+
+# Custom
+baseline_simulator/
+.vscode/
+*.bkp
+# research/star_ris_comp_noma/resources/tex/*
+# environment.yml
+.github/workflows/release.yml
+.github/workflows/test.yml
+
+# latex
+*.acn
+*.acr
+*.alg
+*.aux
+*.bak
+*.bbl
+*.bcf
+*.blg
+*.brf
+*.bst
+*.dvi
+*.fdb_latexmk
+*.fls
+*.glg
+*.glo
+*.gls
+*.idx
+*.ilg
+*.ind
+*.ist
+*.lof
+*.log
+*.lol
+*.lot
+*.maf
+*.mtc
+*.mtc1
+*.nav
+*.nlo
+*.nls
+*.out
+*.pdf
+*.pyg
+*.run.xml
+*.snm
+*.synctex.gz
+*.tex.backup
+*.tex~
+*.thm
+*.toc
+*.vrb
+*.xdy
+*.xml
+*blx.bib
+.bak 
+.mtc
+build/
+*.asv
