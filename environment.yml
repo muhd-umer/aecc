@@ -18,3 +18,4 @@ dependencies:
     - opencv
     - librosa
     - scipy
+    - termcolor
