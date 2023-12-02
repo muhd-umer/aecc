@@ -2,7 +2,7 @@
 
 # ViTCC: Vision Transformer Enabled Communication Compression
 
-<p align="justify"> In the field of communication systems, the transmission of images over noisy channels poses a significant challenge. To address this challenge, a novel communication system is proposed that employs a vision transformer-based autoencoder for image compression and a denoising network for noise removal. The proposed system operates by first encoding the input image into a lower-dimensional latent space representation using the vision transformer-based autoencoder. This compressed representation is <img align="right" width="235" height="125" src="https://raw.githubusercontent.com/google/jax/main/images/jax_logo_250px.png"/> then transmitted through a noisy channel, where it is inevitably corrupted by noise. At the receiver, the denoising network is employed to reconstruct the original image from the received, noisy representation. The denoising network is trained using a dataset of noisy and clean image pairs, enabling it to effectively remove noise artifacts and restore the image's original quality. </p>
+<p align="justify"> In the field of communication systems, the transmission of images over noisy channels poses a significant challenge. To address this challenge, a novel communication system is proposed that employs a vision transformer-based autoencoder for image compression and a denoising network for noise removal. The proposed system operates by first encoding the input image into a lower-dimensional latent space representation using the vision transformer-based autoencoder. This compressed representation is <img align="right" width="100" height="125" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/PyTorch_logo_icon.svg/1200px-PyTorch_logo_icon.svg.png"/> then transmitted through a noisy channel, where it is inevitably corrupted by noise. At the receiver, the denoising network is employed to reconstruct the original image from the received, noisy representation. The denoising network is trained using a dataset of noisy and clean image pairs, enabling it to effectively remove noise artifacts and restore the image's original quality. </p>
 
 ## Block Diagram
 <img align="center" src="resources/flow.png"/>
@@ -35,17 +35,10 @@ To get started with this project, follow the steps below:
     conda activate vtcc
     ```
 
-- Install JAX+Flax
+- Install Torch ecosystem:
 
     ```shell
-    pip install --upgrade pip
-
-    # CUDA 12 installation
-    # Note: wheels only available on linux.
-    pip install --upgrade "jax[cuda12_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
-
-    # Other packages
-    pip install flax ml_collections clu termcolor
+    conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia
     ```
 
 ## License

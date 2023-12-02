@@ -18,4 +18,3 @@ dependencies:
     - opencv
     - librosa
     - scipy
-    - torchvision
