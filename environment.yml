@@ -1,7 +1,7 @@
 name: vitcc
 channels:
-    - conda-forge
     - defaults
+    - conda-forge
 dependencies:
     - python=3.10
     - pip
@@ -18,8 +18,4 @@ dependencies:
     - opencv
     - librosa
     - scipy
-    - ml_collections
-    - einops
-    - clu
-    - tensorflow
-    - tensorflow_datasets
+    - torchvision

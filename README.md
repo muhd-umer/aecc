@@ -10,34 +10,42 @@
 ## Installation
 To get started with this project, follow the steps below:
 
-**Clone the repository**
 - Clone the repository to your local machine using the following command:
-```shell
-git clone https://github.com/muhd-umer/vtcc.git
-```
 
-**Create a new virtual environment**
+    ```shell
+    git clone https://github.com/muhd-umer/vtcc.git
+    ```
+
 - It is recommended to create a new virtual environment so that updates/downgrades of packages do not break other projects. To create a new virtual environment, run the following command:
-```shell
-conda env create -f environment.yml
-```
+
+    ```shell
+    conda env create -f environment.yml
+    ```
 
 - Alternatively, you can use `mamba` (faster than conda) package manager to create a new virtual environment:
-```shell
-conda install mamba -n base -c conda-forge
-mamba env create -f environment.yml
-```
 
-**Install the dependencies**
+    ```shell
+    conda install mamba -n base -c conda-forge
+    mamba env create -f environment.yml
+    ```
+
 - Activate the newly created environment:
-```shell
-conda activate vtcc
-```
 
-- Install PyTorch (Stable 2.0.1):
-```shell
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-```
+    ```shell
+    conda activate vtcc
+    ```
+
+- Install JAX+Flax
+
+    ```shell
+    pip install --upgrade pip
+
+    # CUDA 12 installation
+    # Note: wheels only available on linux.
+    pip install --upgrade "jax[cuda12_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+
+    pip install flax
+    ```
 
 ## License
 ```
