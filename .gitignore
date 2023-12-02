@@ -217,3 +217,5 @@ baseline_simulator/
 .mtc
 build/
 *.asv
+
+data/cifar-10-python.tar.gz
