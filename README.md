@@ -35,10 +35,11 @@ To get started with this project, follow the steps below:
     conda activate vtcc
     ```
 
-- Install Torch ecosystem:
+- Install the PyTorch Ecosystem:
 
     ```shell
-    conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia
+    # pip will take care of necessary CUDA packages
+    pip3 install torch torchvision torchaudio
     ```
 
 ## License
