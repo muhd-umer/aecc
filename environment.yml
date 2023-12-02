@@ -18,3 +18,8 @@ dependencies:
     - opencv
     - librosa
     - scipy
+    - ml_collections
+    - einops
+    - clu
+    - tensorflow
+    - tensorflow_datasets
