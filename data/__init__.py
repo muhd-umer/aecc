@@ -1,1 +1,1 @@
-from .tfds import *
+from .torchdata import *

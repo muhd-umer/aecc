@@ -1,10 +1,13 @@
 import os
-from typing import Union
+from typing import Iterable, Union
 
+import flax.linen as nn
 import jax.numpy as jnp
 import numpy as np
-from colorama import Fore, Style
+from clu import parameter_overview
 from flax.training import checkpoints, train_state
+from jax import random
+from termcolor import colored
 
 
 class FlattenAndCast(object):
@@ -59,7 +62,7 @@ def save_checkpoint(
     save_dir = checkpoints.save_checkpoint(
         ckpt_dir=str(output_dir), target=target, step=epoch, overwrite=True
     )
-    print(f"{Fore.MAGENTA}{' '*10} Saving checkpoint at {save_dir}{Style.RESET_ALL}")
+    print(colored(f"{' '*10} Saving checkpoint at {save_dir}", "magenta"))
 
 
 def restore_checkpoint(
@@ -74,5 +77,12 @@ def restore_checkpoint(
     restored_state = checkpoints.restore_checkpoint(
         ckpt_dir=checkpoint_dir, target=state
     )
-    print(f"Restored state from {Fore.GREEN}{checkpoint_dir}{Style.RESET_ALL}")
+    print(colored(f"Restoring state from {checkpoint_dir}", "green"))
     return restored_state
+
+
+def tabulate(model: nn.Module, input_shape: Iterable[int] = (1, 32, 32, 3)):
+    key = random.PRNGKey(0)
+    variables = model.init(key, jnp.ones(input_shape))
+
+    print(colored(parameter_overview.get_parameter_overview(variables), "cyan"))

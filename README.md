@@ -44,7 +44,8 @@ To get started with this project, follow the steps below:
     # Note: wheels only available on linux.
     pip install --upgrade "jax[cuda12_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 
-    pip install flax
+    # Other packages
+    pip install flax ml_collections clu termcolor
     ```
 
 ## License
