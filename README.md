@@ -40,6 +40,9 @@ To get started with this project, follow the steps below:
     ```shell
     # pip will take care of necessary CUDA packages
     pip3 install torch torchvision torchaudio
+
+    # extra packages
+    pip3 install ml_collections einops
     ```
 
 ## License

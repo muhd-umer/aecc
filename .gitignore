@@ -218,4 +218,6 @@ baseline_simulator/
 build/
 *.asv
 
-data/cifar-10-python.tar.gz
+data/imagenette320p.zip
+data/train
+data/test
