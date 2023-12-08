@@ -42,7 +42,7 @@ To get started with this project, follow the steps below:
     pip3 install torch torchvision torchaudio
 
     # extra packages
-    pip3 install ml_collections einops
+    pip3 install ml_collections einops torchinfo timm
     ```
 
 ## License
