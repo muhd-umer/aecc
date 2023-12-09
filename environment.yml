@@ -1,4 +1,4 @@
-name: vitcc
+name: aecc
 channels:
     - defaults
     - conda-forge

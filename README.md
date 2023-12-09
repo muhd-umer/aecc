@@ -13,7 +13,7 @@ To get started with this project, follow the steps below:
 - Clone the repository to your local machine using the following command:
 
     ```shell
-    git clone https://github.com/muhd-umer/vtcc.git
+    git clone https://github.com/muhd-umer/aecc.git
     ```
 
 - It is recommended to create a new virtual environment so that updates/downgrades of packages do not break other projects. To create a new virtual environment, run the following command:
@@ -32,7 +32,7 @@ To get started with this project, follow the steps below:
 - Activate the newly created environment:
 
     ```shell
-    conda activate vtcc
+    conda activate aecc
     ```
 
 - Install the PyTorch Ecosystem:
