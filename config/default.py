@@ -1,5 +1,5 @@
 """
-Default configuration file for ViTCC.
+Default configuration file for AeCC.
 """
 
 import os
