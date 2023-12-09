@@ -27,6 +27,7 @@ def get_mnist_config():
     cfg.lr_step_size = 15
     cfg.noise_factor = 0.15
     cfg.model_dir = os.path.abspath("../weights/")
+    cfg.model_name = "dae_mnist.pth"
 
     return cfg
 
@@ -51,5 +52,6 @@ def get_imagenette_config():
     cfg.lr_step_size = 15
     cfg.noise_factor = 0.2
     cfg.model_dir = os.path.abspath("../weights/")
+    cfg.model_name = "dae_imagenette.pth"
 
     return cfg

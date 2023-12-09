@@ -222,3 +222,4 @@ data/imagenette320p.zip
 data/train
 data/test
 data/MNIST
+*.pth
