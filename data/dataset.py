@@ -81,7 +81,6 @@ def get_dataloader(
     batch_size,
     num_workers,
     shuffle=True,
-    normalize=True,
     noise_factor=0.2,
     val_split=0.2,
 ):
@@ -96,19 +95,6 @@ def get_dataloader(
             transforms.ToTensor(),
         ]
     )
-
-    if normalize:
-        transform = transforms.Compose(
-            [
-                transforms.Resize((224, 224)),
-                transforms.RandomHorizontalFlip(),
-                # transforms.Grayscale(num_output_channels=1),
-                transforms.ToTensor(),
-                transforms.Normalize(
-                    (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)
-                ),  # ImageNet stats
-            ]
-        )
 
     dataset = Imagenette(root, mode, transform=transform, noise_factor=noise_factor)
 

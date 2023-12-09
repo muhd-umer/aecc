@@ -47,8 +47,9 @@ def get_imagenette_config():
     cfg.lr = 1e-3
     cfg.weight_decay = 1e-4
     cfg.lr_gamma = 0.1
-    cfg.num_epochs = 50
-    cfg.lr_step_size = 20
+    cfg.num_epochs = 30
+    cfg.lr_step_size = 15
+    cfg.noise_factor = 0.2
     cfg.model_dir = os.path.abspath("../weights/")
 
     return cfg
