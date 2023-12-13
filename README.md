@@ -44,3 +44,23 @@ To get started with this project, follow the steps below:
     # extra packages
     pip3 install ml_collections einops torchinfo timm
     ```
+
+## Project Structure
+The project is structured as follows:
+
+```shell
+aecc
+├── config/           # configuration directory
+├── data/             # data directory
+├── model/            # model directory
+├── notebooks/        # notebooks directory
+├── resources/        # resources directory
+├── utils/            # utility directory
+├── LICENSE           # license file
+├── README.md         # readme file
+├── environment.yml   # conda environment file
+└── main.py           # main file
+```
+
+## Contributing ❤️
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
