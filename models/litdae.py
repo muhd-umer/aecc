@@ -90,9 +90,7 @@ class LitDAE(pl.LightningModule):
         originals = y[:6]
 
         # Log images last batch and ensure logger has add_image method
-        if self.trainer.is_last_batch and hasattr(
-            self.logger.experiment, "log_image"
-        ):  # for wandb
+        if hasattr(self.logger.experiment, "log_image"):  # for wandb
             self.logger.experiment.log_image(
                 key="samples", image=torchvision.utils.make_grid(samples)
             )
@@ -103,9 +101,7 @@ class LitDAE(pl.LightningModule):
             self.logger.experiment.log_image(
                 key="originals", image=torchvision.utils.make_grid(originals)
             )
-        elif self.trainer.is_last_batch and hasattr(  # for tensorboard
-            self.logger.experiment, "add_images"
-        ):
+        elif hasattr(self.logger.experiment, "add_images"):  # for tensorboards
             self.logger.experiment.add_images(
                 tag="samples", img_tensor=torchvision.utils.make_grid(samples)
             )
