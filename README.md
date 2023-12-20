@@ -13,37 +13,47 @@ To get started with this project, follow the steps below:
 
 - Clone the repository to your local machine using the following command:
 
-    ```shell
+    ```fish
     git clone https://github.com/muhd-umer/aecc.git
     ```
 
 - It is recommended to create a new virtual environment so that updates/downgrades of packages do not break other projects. To create a new virtual environment, run the following command:
 
-    ```shell
+    ```fish
     conda env create -f environment.yml
     ```
 
 - Alternatively, you can use `mamba` (faster than conda) package manager to create a new virtual environment:
 
-    ```shell
-    conda install mamba -n base -c conda-forge
+    ```fish
+    wget -O miniforge.sh \
+         "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+    bash miniforge.sh -b -p "${HOME}/conda"
+
+    source "${HOME}/conda/etc/profile.d/conda.sh"
+
+    # For mamba support also run the following command
+    source "${HOME}/conda/etc/profile.d/mamba.sh"
+
+    conda activate
     mamba env create -f environment.yml
     ```
 
 - Activate the newly created environment:
 
-    ```shell
+    ```fish
     conda activate aecc
     ```
 
 - Install the PyTorch Ecosystem:
 
-    ```shell
+    ```fish
     # pip will take care of necessary CUDA packages
     pip3 install torch torchvision torchaudio
 
-    # extra packages
-    pip3 install ml_collections einops torchinfo timm
+    # additional packages (already included in environment.yml)
+    pip3 install einops python-box timm torchinfo \
+                 pytorch-lightning rich wandb rawpy
     ```
 
 ## Project Structure
@@ -53,14 +63,14 @@ The project is structured as follows:
 aecc
 ├── config/           # configuration directory
 ├── data/             # data directory
-├── model/            # model directory
-├── notebooks/        # notebooks directory
+├── models/            # model directory
 ├── resources/        # resources directory
 ├── utils/            # utility directory
 ├── LICENSE           # license file
 ├── README.md         # readme file
 ├── environment.yml   # conda environment file
-└── main.py           # main file
+├── upscale.py        # upscaling script
+└── train.py           # training script
 ```
 
 ## Contributing ❤️
