@@ -223,3 +223,5 @@ data/train
 data/test
 data/MNIST
 *.pth
+
+logs/
