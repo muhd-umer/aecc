@@ -13,14 +13,16 @@ import lightning as pl
 import lightning.pytorch.callbacks as pl_callbacks
 import matplotlib.pyplot as plt
 import torch
+import torchvision
+import torchvision.transforms.v2 as v2
 from termcolor import colored
 from torchinfo import summary
 from torchmetrics import MeanSquaredError
 from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity
 
 from config import get_config
-from data import get_imagenette_loaders, get_imagenette_transform
-from models import LitDAE, dae_vit_models
+from data import *
+from models import DAEViT, LitDAE, dae_vit_models
 from utils import EMACallback, SimplifiedProgressBar
 
 # Common setup
@@ -34,6 +36,7 @@ def train(
     accelerator,
     devices,
     rich_progress,
+    test_mode=False,
     resume=False,
     weights=None,
     logger_backend="tensorboard",
@@ -52,21 +55,63 @@ def train(
         )
 
     # Get the data loaders
-    train_transform, test_transform = get_imagenette_transform(cfg)
-    train_dataloader, val_dataloader, _, steps_per_epoch = get_imagenette_loaders(
-        cfg.data_dir,
-        train_transform,
-        test_transform,
-        batch_size=cfg.batch_size,
-        num_workers=cfg.num_workers,
-        val_size=cfg.val_size,
-        noise_factor=cfg.noise_factor,
-        return_steps=True,
-    )
+    if cfg.dataset == "imagenette":
+        train_transform, test_transform = get_imagenette_transform(cfg)
+        (
+            train_dataloader,
+            val_dataloader,
+            test_dataloader,
+            steps_per_epoch,
+        ) = get_imagenette_loaders(
+            cfg.data_dir,
+            train_transform,
+            test_transform,
+            batch_size=cfg.batch_size,
+            num_workers=cfg.num_workers,
+            val_size=cfg.val_size,
+            noise_factor=cfg.noise_factor,
+            return_steps=True,
+        )
+    elif cfg.dataset == "mnist":
+        raise NotImplementedError("Yet to be implemented!")
+    elif cfg.dataset == "cifar100":
+        train_transform, test_transform = get_cifar100_transform(cfg)
+        (
+            train_dataloader,
+            val_dataloader,
+            test_dataloader,
+            steps_per_epoch,
+        ) = get_cifar100_loaders(
+            cfg.data_dir,
+            train_transform,
+            test_transform,
+            batch_size=cfg.batch_size,
+            num_workers=cfg.num_workers,
+            val_size=cfg.val_size,
+            noise_factor=cfg.noise_factor,
+            return_steps=True,
+        )
+    else:
+        raise ValueError(
+            colored(
+                "Provide a valid dataset (imagenette, mnist, cifar100)",
+                "red",
+            )
+        )
 
     # Get the model
-    model = dae_vit_models[cfg.model_name](
-        in_channels=cfg.in_channels, img_size=cfg.img_size
+    # model = dae_vit_models[cfg.model_name](
+    #     in_channels=cfg.in_channels, img_size=cfg.img_size
+    # )
+    model = DAEViT(
+        in_channels=cfg.in_channels,
+        img_size=cfg.img_size,
+        patch_size=cfg.patch_size,
+        emb_dim=cfg.emb_dim,
+        encoder_layer=cfg.encoder_layer,
+        encoder_head=cfg.encoder_head,
+        decoder_layer=cfg.decoder_layer,
+        decoder_head=cfg.decoder_head,
     )
 
     optimizer = torch.optim.AdamW(
@@ -175,10 +220,13 @@ def train(
         )
 
     # Train the model
-    if resume:
-        trainer.fit(model, train_dataloader, val_dataloader, ckpt_path=weights)
+    if not test_mode:
+        if resume:
+            trainer.fit(model, train_dataloader, val_dataloader, ckpt_path=weights)
+        trainer.fit(model, train_dataloader, val_dataloader)
 
-    trainer.fit(model, train_dataloader, val_dataloader)
+    # Evaluate the model on the test set
+    trainer.test(model, test_dataloader)
 
 
 if __name__ == "__main__":
@@ -257,6 +305,9 @@ if __name__ == "__main__":
         help="Resume training from the provided weights",
     )
     parser.add_argument(
+        "--test-only", action="store_true", help="Only test the model, do not train"
+    )
+    parser.add_argument(
         "--logger-backend",
         type=str,
         default="tensorboard",
@@ -278,7 +329,7 @@ if __name__ == "__main__":
 
     if args.devices != "auto":
         args.devices = int(args.devices)
-    if args.resume and args.weights is None:
+    if (args.resume or args.test_only) and args.weights is None:
         raise ValueError(
             colored(
                 "Provide the path to the weights file using --weights",
@@ -291,7 +342,8 @@ if __name__ == "__main__":
         args.accelerator,
         args.devices,
         args.rich_progress,
+        args.test_only,
         args.resume,
-        args.weights if args.resume else None,
+        args.weights if args.resume or args.test_only else None,
         args.logger_backend,
     )

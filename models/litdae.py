@@ -9,6 +9,7 @@ from typing import Tuple
 
 import lightning as pl
 import torch
+import torchmetrics.image as im_metrics
 import torchvision
 
 
@@ -35,6 +36,9 @@ class LitDAE(pl.LightningModule):
         self.lr_scheduler = lr_scheduler
         self.cfg = cfg
         self.loss = criterion
+
+        self.ssim = im_metrics.StructuralSimilarityIndexMeasure()
+        self.psnr = im_metrics.PeakSignalNoiseRatio()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -65,6 +69,7 @@ class LitDAE(pl.LightningModule):
         y_hat = self.model(x)
         loss = self.loss(y_hat, y)
         self.log("train_loss", loss, prog_bar=True)
+
         return loss
 
     def validation_step(
@@ -85,35 +90,7 @@ class LitDAE(pl.LightningModule):
         loss = self.loss(y_hat, y)
         self.log("val_loss", loss, sync_dist=True, prog_bar=True)
 
-        samples = x[:6]
-        reconstructions = y_hat[:6]
-        originals = y[:6]
-
-        # Log images last batch and ensure logger has add_image method
-        if hasattr(self.logger.experiment, "log_image"):  # for wandb
-            self.logger.experiment.log_image(
-                key="samples", image=torchvision.utils.make_grid(samples)
-            )
-            self.logger.experiment.log_image(
-                key="reconstructions",
-                image=torchvision.utils.make_grid(reconstructions),
-            )
-            self.logger.experiment.log_image(
-                key="originals", image=torchvision.utils.make_grid(originals)
-            )
-        elif hasattr(self.logger.experiment, "add_images"):  # for tensorboards
-            self.logger.experiment.add_images(
-                tag="samples", img_tensor=torchvision.utils.make_grid(samples)
-            )
-            self.logger.experiment.add_images(
-                tag="reconstructions",
-                img_tensor=torchvision.utils.make_grid(reconstructions),
-            )
-            self.logger.experiment.add_images(
-                tag="originals", img_tensor=torchvision.utils.make_grid(originals)
-            )
-        else:
-            pass
+        return loss
 
     def test_step(
         self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int
@@ -130,9 +107,15 @@ class LitDAE(pl.LightningModule):
         """
         x, y = batch
         y_hat = self.model(x)
+
+        # denoising autoencoder metrics
         loss = self.loss(y_hat, y)
+        ssim = self.ssim(y_hat, y)
+        psnr = self.psnr(y_hat, y)
+
         self.log("test_loss", loss, sync_dist=True, prog_bar=True)
-        return loss
+        self.log("ssim", ssim, sync_dist=True, prog_bar=True)
+        self.log("psnr", psnr, sync_dist=True, prog_bar=True)
 
     def configure_optimizers(self) -> Tuple[list, list]:
         """
