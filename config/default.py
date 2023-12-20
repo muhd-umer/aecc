@@ -28,6 +28,7 @@ def get_config():
     cfg.noise_factor = 0.2
 
     # Training
+    cfg.loss = "lpips"  # choose from "mse", "lpips"
     cfg.num_epochs = 100
     cfg.lr = 0.0005
     cfg.weight_decay = 0.005
@@ -36,6 +37,6 @@ def get_config():
 
     # choose from "dae_vit_tiny", "dae_vit_small", "dae_vit_base", ...
     # "dae_vit_large", "dae_vit_huge"
-    cfg.model_name = "dae_vit_tiny"
+    cfg.model_name = "dae_vit_small"
 
     return cfg
