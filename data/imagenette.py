@@ -5,6 +5,7 @@ import os
 
 import numpy as np
 import torch
+import torchvision
 import torchvision.transforms.v2 as v2
 from PIL import Image
 from termcolor import colored
@@ -45,13 +46,10 @@ class Imagenette(Dataset):
         return len(self.imgs)
 
     def _add_noise(self, img):
-        # Convert image to NumPy array
         img_array = np.array(img)
 
         # Generate Gaussian noise
         noise = np.random.normal(loc=0, scale=self.noise_factor, size=img_array.shape)
-
-        # Add noise to the image
         noisy_img_array = np.clip(img_array + noise, 0, 255).astype(np.uint8)
 
         # Convert back to Pillow image
@@ -156,8 +154,7 @@ def get_imagenette_transform(cfg):
                     interpolation=v2.InterpolationMode.BICUBIC,
                     antialias=True,
                 ),
-                v2.RandomRotation(degrees=(-30, 30)),
-                v2.RandomAutocontrast(p=0.25),
+                v2.RandomHorizontalFlip(p=0.5),
                 v2.ToDtype(torch.float32, scale=True),
                 v2.Normalize(mean=cfg.mean, std=cfg.std),
             ]
