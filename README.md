@@ -56,6 +56,19 @@ To get started with this project, follow the steps below:
                  pytorch-lightning rich wandb rawpy
     ```
 
+## Dataset
+A custom Imagenette dataset is used for training and testing the model. The dataset can be downloaded from [here](https://github.com/muhd-umer/aecc/releases/tag/v0.0.1).
+
+Or, you can use the following commands to download the dataset:
+
+```fish
+wget -O imagenette.zip \
+    "https://github.com/muhd-umer/aecc/releases/download/v0.0.1/imagenette320p.zip"
+
+# unzip the dataset
+unzip -q data/imagenette.zip -d data/
+```
+
 ## Project Structure
 The project is structured as follows:
 
