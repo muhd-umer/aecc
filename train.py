@@ -3,17 +3,6 @@ MIT License:
 Copyright (c) 2023 Muhammad Umer
 
 Training script for Pytorch models [Pytorch Lightning]
-
-Usage:
-    >>> python train.py --help
-    >>> python train.py --data-dir <path> --model-dir <path> --batch-size <int> --num-workers <int> --num-epochs <int> --lr <float> --rich-progress --accelerator <str> --devices <str> --weights <path> --resume --test-only
-    
-Example:
-    Use the default config:
-    >>> python train.py
-    
-    Override the config:
-    >>> python train.py --data-dir data --model-dir models --batch-size 128 --num-workers 8 --num-epochs 100 --lr 0.001 --rich-progress --accelerator gpu --devices 1 --weights models/best_model.ckpt --resume --test-only
 """
 
 import argparse
