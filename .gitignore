@@ -222,6 +222,9 @@ data/imagenette320p.zip
 data/train
 data/test
 data/MNIST
-*.pth
+data/cifar-10-batches-py
+data/cifar-100-python
 
+*.pth
 logs/
+*.ipynb
