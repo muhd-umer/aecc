@@ -3,6 +3,7 @@ Dataset class for custom Imagenette dataset.
 """
 import os
 
+import numpy as np
 import torch
 import torchvision.transforms.v2 as v2
 from PIL import Image
@@ -43,18 +44,32 @@ class Imagenette(Dataset):
     def __len__(self):
         return len(self.imgs)
 
+    def _add_noise(self, img):
+        # Convert image to NumPy array
+        img_array = np.array(img)
+
+        # Generate Gaussian noise
+        noise = np.random.normal(loc=0, scale=self.noise_factor, size=img_array.shape)
+
+        # Add noise to the image
+        noisy_img_array = np.clip(img_array + noise, 0, 255).astype(np.uint8)
+
+        # Convert back to Pillow image
+        noisy_img = Image.fromarray(noisy_img_array)
+
+        return noisy_img, img
+
     def __getitem__(self, idx):
         img_path = self.imgs[idx]
 
         img = Image.open(img_path).convert("RGB")
+        noisy_img, img = self._add_noise(img)
 
         if self.transform is not None:
+            noisy_img = self.transform(noisy_img)
             img = self.transform(img)
 
-        noisy_img = img + torch.randn_like(img) * self.noise_factor
-        noisy_img = torch.clamp(noisy_img, 0.0, 1.0)
-
-        return img, noisy_img
+        return noisy_img, img
 
     def _init_dataset(self):
         """

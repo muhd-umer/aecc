@@ -9,10 +9,7 @@ from typing import Tuple
 
 import lightning as pl
 import torch
-import torch.nn as nn
-import torch.optim as optim
-import torch.optim.lr_scheduler as lr_scheduler
-from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity
+import torchvision
 
 
 class LitDAE(pl.LightningModule):
@@ -20,7 +17,7 @@ class LitDAE(pl.LightningModule):
     Denoising Autoencoder (DAE) Pytorch Lightning module.
     """
 
-    def __init__(self, model, cfg, optimizer, lr_scheduler) -> None:
+    def __init__(self, model, cfg, optimizer, criterion, lr_scheduler) -> None:
         """
         Initialize the DAE.
 
@@ -28,6 +25,7 @@ class LitDAE(pl.LightningModule):
             model (nn.Module): DAE model.
             cfg (dict): Configuration dictionary.
             optimizer (optim.Optimizer): Configured optimizer.
+            criterion (torchmetrics.Metric): Configured loss function.
             lr_scheduler (lr_scheduler.LRScheduler): Learning rate scheduler.
         """
         super().__init__()
@@ -36,10 +34,7 @@ class LitDAE(pl.LightningModule):
         self.optimizer = optimizer
         self.lr_scheduler = lr_scheduler
         self.cfg = cfg
-
-        self.loss = LearnedPerceptualImagePatchSimilarity(
-            net_type="alex", normalize=False, reduction="mean"
-        )
+        self.loss = criterion
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -89,7 +84,40 @@ class LitDAE(pl.LightningModule):
         y_hat = self.model(x)
         loss = self.loss(y_hat, y)
         self.log("val_loss", loss, sync_dist=True, prog_bar=True)
-        return loss
+
+        samples = x[:6]
+        reconstructions = y_hat[:6]
+        originals = y[:6]
+
+        # Log images last batch and ensure logger has add_image method
+        if self.trainer.is_last_batch and hasattr(
+            self.logger.experiment, "log_image"
+        ):  # for wandb
+            self.logger.experiment.log_image(
+                key="samples", image=torchvision.utils.make_grid(samples)
+            )
+            self.logger.experiment.log_image(
+                key="reconstructions",
+                image=torchvision.utils.make_grid(reconstructions),
+            )
+            self.logger.experiment.log_image(
+                key="originals", image=torchvision.utils.make_grid(originals)
+            )
+        elif self.trainer.is_last_batch and hasattr(  # for tensorboard
+            self.logger.experiment, "add_images"
+        ):
+            self.logger.experiment.add_images(
+                tag="samples", img_tensor=torchvision.utils.make_grid(samples)
+            )
+            self.logger.experiment.add_images(
+                tag="reconstructions",
+                img_tensor=torchvision.utils.make_grid(reconstructions),
+            )
+            self.logger.experiment.add_images(
+                tag="originals", img_tensor=torchvision.utils.make_grid(originals)
+            )
+        else:
+            pass
 
     def test_step(
         self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int

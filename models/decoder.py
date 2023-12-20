@@ -90,7 +90,7 @@ class ViTDecoder(nn.Module):
         patches = self.head(features)
         img = self.patch2img(patches)
 
-        # Get the image from 0 to 1
-        img = torch.sigmoid(img)
+        # Get the image from -1 to 1
+        img = torch.tanh(img)
 
         return img
