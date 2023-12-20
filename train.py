@@ -151,7 +151,7 @@ def train(
             # precision=16,
             max_epochs=cfg.num_epochs,
             enable_model_summary=False,
-            # check_val_every_n_epoch=5,
+            check_val_every_n_epoch=cfg.val_freq,
             logger=logger,
             callbacks=[
                 # pl_callbacks.RichModelSummary(max_depth=3),
@@ -171,7 +171,7 @@ def train(
             # precision=16,
             max_epochs=cfg.num_epochs,
             enable_model_summary=False,
-            # check_val_every_n_epoch=5,
+            check_val_every_n_epoch=cfg.val_freq,
             logger=logger,
             callbacks=[
                 # pl_callbacks.ModelSummary(max_depth=3),
@@ -272,6 +272,12 @@ if __name__ == "__main__":
         type=str,
         default="tensorboard",
         help="Logger backend (tensorboard, wandb)",
+    )
+    parser.add_argument(
+        "--val-freq",
+        type=int,
+        default=cfg.val_freq,
+        help="Validate every n epochs",
     )
     args = parser.parse_args()
 
