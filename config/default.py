@@ -7,51 +7,35 @@ import os
 import ml_collections
 
 
-def get_mnist_config():
+def get_config():
     cfg = ml_collections.ConfigDict()
+
+    # Set root directories
+    cfg.root_dir = os.path.abspath(".")
+    cfg.log_dir = os.path.abspath(os.path.join(cfg.root_dir, "logs"))
 
     # Misc
     cfg.seed = 42
 
     # Dataset
-    cfg.data_root = os.path.abspath("../data/")
-    cfg.batch_size = 32
+    cfg.data_dir = os.path.abspath(os.path.join(cfg.root_dir, "data"))
+    cfg.batch_size = 64
     cfg.num_workers = 4
     cfg.pin_memory = True
-
-    # Training
-    cfg.lr = 1e-3
-    cfg.weight_decay = 1e-4
-    cfg.lr_gamma = 0.1
-    cfg.num_epochs = 30
-    cfg.lr_step_size = 15
-    cfg.noise_factor = 0.15
-    cfg.model_dir = os.path.abspath("../weights/")
-    cfg.model_name = "dae_mnist.pth"
-
-    return cfg
-
-
-def get_imagenette_config():
-    cfg = ml_collections.ConfigDict()
-
-    # Misc
-    cfg.seed = 42
-
-    # Dataset
-    cfg.data_root = os.path.abspath("../data/")
-    cfg.batch_size = 8
-    cfg.num_workers = 4
-    cfg.pin_memory = True
-
-    # Training
-    cfg.lr = 1e-3
-    cfg.weight_decay = 1e-4
-    cfg.lr_gamma = 0.1
-    cfg.num_epochs = 30
-    cfg.lr_step_size = 15
+    cfg.val_size = 0.1
+    cfg.in_channels = 3
+    cfg.img_size = 224  # desired image size, not actual image size
     cfg.noise_factor = 0.2
-    cfg.model_dir = os.path.abspath("../weights/")
-    cfg.model_name = "dae_imagenette.pth"
+
+    # Training
+    cfg.num_epochs = 100
+    cfg.lr = 0.0005
+    cfg.weight_decay = 0.005
+    cfg.momentum = 0.9
+    cfg.model_dir = os.path.abspath(os.path.join(cfg.root_dir, "weights"))
+
+    # choose from "dae_vit_tiny", "dae_vit_small", "dae_vit_base", ...
+    # "dae_vit_large", "dae_vit_huge"
+    cfg.model_name = "dae_vit_tiny"
 
     return cfg
