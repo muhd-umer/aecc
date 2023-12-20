@@ -69,6 +69,23 @@ wget -O imagenette.zip \
 unzip -q data/imagenette.zip -d data/
 ```
 
+CIFAR100 can be downloaded from [here](https://www.cs.toronto.edu/~kriz/cifar.html).
+
+Or, you can use the following commands to download the dataset:
+
+```fish
+# download as python pickle
+cd data
+curl -O https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz
+tar -xvzf cifar-100-python.tar.gz
+
+# download as ImageNet format
+pip3 install cifar2png
+cifar2png cifar100 data/cifar100
+```
+
+MNIST data
+
 ## Training
 To train the model from scratch, run the following command:
 
@@ -89,6 +106,7 @@ python3 train.py --data-dir DATA_DIR \  # directory containing data
                  --devices DEVICES \  # number of devices
                  --weights WEIGHTS \  # path to weights file
                  --resume \  # resume training from checkpoint
+                 --test-only \  # test model
                  --logger-backend LOGGER_BACKEND  # (wandb, tensorboard)
                  --val-freq VAL_FREQ \  # validation frequency
 ```
