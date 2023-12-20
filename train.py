@@ -151,7 +151,7 @@ def train(
             # precision=16,
             max_epochs=cfg.num_epochs,
             enable_model_summary=False,
-            check_val_every_n_epoch=5,
+            # check_val_every_n_epoch=5,
             logger=logger,
             callbacks=[
                 # pl_callbacks.RichModelSummary(max_depth=3),
@@ -171,7 +171,7 @@ def train(
             # precision=16,
             max_epochs=cfg.num_epochs,
             enable_model_summary=False,
-            check_val_every_n_epoch=5,
+            # check_val_every_n_epoch=5,
             logger=logger,
             callbacks=[
                 # pl_callbacks.ModelSummary(max_depth=3),
