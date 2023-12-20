@@ -26,6 +26,8 @@ import matplotlib.pyplot as plt
 import torch
 from termcolor import colored
 from torchinfo import summary
+from torchmetrics import MeanSquaredError
+from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity
 
 from config import get_config
 from data import get_imagenette_loaders, get_imagenette_transform
@@ -51,9 +53,7 @@ def train(
         logger = pl.pytorch.loggers.TensorBoardLogger(save_dir=cfg.log_dir, name=".")
 
     elif logger_backend == "wandb":
-        logger = pl.pytorch.loggers.WandbLogger(
-            project="torch-classification", save_dir=cfg.log_dir
-        )
+        logger = pl.pytorch.loggers.WandbLogger(project="aecc", save_dir=cfg.log_dir)
     else:
         raise ValueError(
             colored(
@@ -89,7 +89,19 @@ def train(
         optimizer, T_max=cfg.num_epochs, eta_min=0, last_epoch=-1
     )
 
-    model = LitDAE(model, cfg, optimizer, lr_scheduler)
+    if cfg.loss == "mse":
+        loss = MeanSquaredError()
+    elif cfg.loss == "lpips":
+        loss = LearnedPerceptualImagePatchSimilarity(net_type="alex")
+    else:
+        raise ValueError(
+            colored(
+                "Provide a valid loss (mse, lpips)",
+                "red",
+            )
+        )
+
+    model = LitDAE(model, cfg, optimizer, loss, lr_scheduler)
 
     # Divide steps per epoch by number of GPUs
     if devices != "auto":
@@ -212,6 +224,24 @@ if __name__ == "__main__":
         "--lr", type=float, default=cfg.lr, help="Learning rate for the optimizer"
     )
     parser.add_argument(
+        "--val-size",
+        type=float,
+        default=cfg.val_size,
+        help="Validation size for the data",
+    )
+    parser.add_argument(
+        "--noise-factor",
+        type=float,
+        default=cfg.noise_factor,
+        help="Noise factor for the data",
+    )
+    parser.add_argument(
+        "--loss",
+        type=str,
+        default=cfg.loss,
+        help="Loss function for training (mse, lpips)",
+    )
+    parser.add_argument(
         "--rich-progress", action="store_true", help="Use rich progress bar"
     )
     parser.add_argument(
@@ -247,10 +277,9 @@ if __name__ == "__main__":
 
     cfg.update(args.__dict__)
 
-    # Imagenette mean/std
-    # (tensor([0.4671, 0.4590, 0.4304]), tensor([0.2815, 0.2777, 0.2991]))
-    cfg.mean = [0.4671, 0.4590, 0.4304]
-    cfg.std = [0.2815, 0.2777, 0.2991]
+    # Set mean/std to get images in [-1, 1]
+    cfg.mean = [0.5, 0.5, 0.5]
+    cfg.std = [0.5, 0.5, 0.5]
 
     if args.devices != "auto":
         args.devices = int(args.devices)
