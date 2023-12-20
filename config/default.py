@@ -29,7 +29,8 @@ def get_config():
 
     # Training
     cfg.loss = "lpips"  # choose from "mse", "lpips"
-    cfg.num_epochs = 100
+    cfg.num_epochs = 1000
+    cfg.val_freq = 50
     cfg.lr = 0.0005
     cfg.weight_decay = 0.005
     cfg.momentum = 0.9
