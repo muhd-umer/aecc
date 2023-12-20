@@ -87,8 +87,15 @@ class LitDAE(pl.LightningModule):
         """
         x, y = batch
         y_hat = self.model(x)
+
+        # denoising autoencoder metrics
         loss = self.loss(y_hat, y)
-        self.log("val_loss", loss, sync_dist=True, prog_bar=True)
+        ssim = self.ssim(y_hat, y)
+        psnr = self.psnr(y_hat, y)
+
+        self.log("test_loss", loss, sync_dist=True, prog_bar=True)
+        self.log("ssim", ssim, sync_dist=True, prog_bar=True)
+        self.log("psnr", psnr, sync_dist=True, prog_bar=True)
 
         return loss
 
