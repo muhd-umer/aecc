@@ -84,7 +84,12 @@ pip3 install cifar2png
 cifar2png cifar100 data/cifar100
 ```
 
-MNIST data
+For MNIST, `torchvision` can be used to download the dataset:
+
+```fish
+# download MNIST dataset
+python3 -c "import torchvision; torchvision.datasets.MNIST('data/', download=True)"
+```
 
 ## Training
 To train the model from scratch, run the following command:
