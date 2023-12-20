@@ -69,6 +69,31 @@ wget -O imagenette.zip \
 unzip -q data/imagenette.zip -d data/
 ```
 
+## Training
+To train the model from scratch, run the following command:
+
+```fish  
+# train the model from scratch using default config
+python3 train.py
+
+# train the model from scratch using overrides
+python3 train.py --data-dir DATA_DIR \  # directory containing data
+                 --model-dir MODEL_DIR \  # directory to save model
+                 --batch-size BATCH_SIZE \  # batch size
+                 --loss LOSS \  # loss function (mse, lpips)
+                 --num-workers NUM_WORKERS \  # number of workers
+                 --num-epochs NUM_EPOCHS \  # number of epochs
+                 --lr LR \  # learning rate
+                 --rich-progress \  # use rich progress bar
+                 --accelerator ACCELERATOR \  # type of accelerator
+                 --devices DEVICES \  # number of devices
+                 --weights WEIGHTS \  # path to weights file
+                 --resume \  # resume training from checkpoint
+                 --logger-backend LOGGER_BACKEND  # (wandb, tensorboard)
+                 --val-freq VAL_FREQ \  # validation frequency
+```
+
+
 ## Project Structure
 The project is structured as follows:
 
