@@ -4,11 +4,11 @@ Default configuration file for AeCC.
 
 import os
 
-import ml_collections
+from box import Box
 
 
 def get_config():
-    cfg = ml_collections.ConfigDict()
+    cfg = Box()
 
     # Set root directories
     cfg.root_dir = os.path.abspath(".")
