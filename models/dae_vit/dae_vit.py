@@ -21,7 +21,7 @@ from .encoder import ViTEncoder
 
 class DAEViT(nn.Module):
     """
-    Denoising Autoencoder Vision Transformer class.
+    A ViT Denoising AutoEncoder model.
 
     Attributes:
         encoder (ViTEncoder): Encoder part of the autoencoder.
