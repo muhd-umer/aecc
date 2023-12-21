@@ -96,24 +96,31 @@ To train the model from scratch, run the following command:
 
 ```fish  
 # train the model from scratch using default config
-python3 train.py
+python3 train.py --model-name MODEL_NAME \  # name of the model
+                 --dataset DATASET  # name of the dataset
 
-# train the model from scratch using overrides
-python3 train.py --data-dir DATA_DIR \  # directory containing data
+# Train the model from scratch using overrides
+python3 train.py --model-name MODEL_NAME \  # name of the model
+                 --dataset DATASET \  # name of the dataset
+                 --model-cfg MODEL_CFG \  # path to the model config file
+                 --data-cfg DATA_CFG \  # path to the data config file
+                 --data-dir DATA_DIR \  # directory containing data
                  --model-dir MODEL_DIR \  # directory to save model
                  --batch-size BATCH_SIZE \  # batch size
-                 --loss LOSS \  # loss function (mse, lpips)
                  --num-workers NUM_WORKERS \  # number of workers
                  --num-epochs NUM_EPOCHS \  # number of epochs
                  --lr LR \  # learning rate
+                 --val-size VAL_SIZE \  # validation size
+                 --noise-factor NOISE_FACTOR \  # noise factor
+                 --loss LOSS \  # loss function (mse, lpips)
                  --rich-progress \  # use rich progress bar
                  --accelerator ACCELERATOR \  # type of accelerator
-                 --devices DEVICES \  # number of devices
+                 --devices DEVICES \  # devices to use for training
                  --weights WEIGHTS \  # path to weights file
-                 --resume \  # resume training from checkpoint
-                 --test-only \  # test model
-                 --logger-backend LOGGER_BACKEND  # (wandb, tensorboard)
-                 --val-freq VAL_FREQ \  # validation frequency
+                 --resume \  # resume training from the provided weights
+                 --test-only \  # only test the model, do not train
+                 --logger-backend LOGGER_BACKEND \  # logger backend (tensorboard, wandb)
+                 --val-freq VAL_FREQ  # validate every n epochs
 ```
 
 
