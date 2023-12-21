@@ -10,7 +10,6 @@ from typing import Tuple
 import lightning as pl
 import torch
 import torchmetrics.image as im_metrics
-import torchvision
 
 
 class LitDAE(pl.LightningModule):
