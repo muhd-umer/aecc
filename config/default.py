@@ -4,10 +4,17 @@ Default configuration file for AeCC.
 
 import os
 
+import yaml
 from box import Box
 
 
-def get_config():
+def get_defaults():
+    """
+    Returns a Box object containing the default configuration parameters.
+
+    Returns:
+        cfg (Box): default configuration parameters.
+    """
     cfg = Box()
 
     # Set root directories
@@ -17,36 +24,55 @@ def get_config():
     # Misc
     cfg.seed = 42
 
-    # Dataset
-    cfg.dataset = "cifar10"  # choose from "mnist", "cifar100", "imagenette", "cifar10"
-    cfg.data_dir = os.path.abspath(os.path.join(cfg.root_dir, "data"))
-    cfg.batch_size = 64
-    cfg.num_workers = 4
-    cfg.pin_memory = True
-    cfg.val_size = 0.1
-    cfg.in_channels = 3
-    cfg.img_size = 32  # desired image size, not actual image size
-    cfg.noise_factor = 0.2
-
-    # Model
-    cfg.patch_size = 4
-    cfg.emb_dim = 192
-    cfg.encoder_layer = 12
-    cfg.encoder_head = 3
-    cfg.decoder_layer = 4
-    cfg.decoder_head = 3
-
     # Training
     cfg.loss = "mse"  # choose from "mse", "lpips"
     cfg.num_epochs = 1000
     cfg.val_freq = 50
+    cfg.val_size = 0.1
+    cfg.noise_factor = 0.2
     cfg.lr = 0.0005
     cfg.weight_decay = 0.005
     cfg.momentum = 0.9
     cfg.model_dir = os.path.abspath(os.path.join(cfg.root_dir, "weights"))
 
-    # choose from "dae_vit_tiny", "dae_vit_small", "dae_vit_base", ...
-    # "dae_vit_large", "dae_vit_huge"
-    cfg.model_name = "dae_vit_small"
+    # Set data directory
+    cfg.data_dir = os.path.abspath(os.path.join(cfg.root_dir, "data"))
+    cfg.batch_size = 64
+    cfg.num_workers = 4
+    cfg.pin_memory = True
+
+    return cfg
+
+
+def get_cfg(model, dataset, model_cfg_path, data_cfg_path, cfg=None):
+    """
+    Returns a Box object containing the configuration parameters updated with the provided arguments.
+
+    Args:
+        model (str): name of the model.
+        dataset (str): name of the dataset.
+        model_cfg_path (str): path to the YAML file containing the model configuration.
+        data_cfg_path (str): path to the YAML file containing the dataset configuration.
+        cfg (Box, optional): configuration parameters to update. If None, get defaults.
+
+    Returns:
+        cfg (Box): updated configuration parameters.
+    """
+    if cfg is None:
+        cfg = get_defaults()
+
+    # Load dataset and model configurations from YAML files
+    with open(model_cfg_path, "r") as ymlfile:
+        model_cfg_dict = yaml.load(ymlfile, Loader=yaml.FullLoader)
+
+    with open(data_cfg_path, "r") as ymlfile:
+        data_cfg_dict = yaml.load(ymlfile, Loader=yaml.FullLoader)
+
+    model_cfg = model_cfg_dict[model]
+    data_cfg = data_cfg_dict[dataset]
+
+    # Update cfg with the loaded configurations
+    cfg.update(data_cfg)
+    cfg.update(model_cfg)
 
     return cfg

@@ -1,0 +1,19 @@
+cifar10:
+  dataset: "cifar10"
+  in_channels: 3
+  img_size: 32
+
+cifar100:
+  dataset: "cifar100"
+  in_channels: 3
+  img_size: 32
+
+imagenette:
+  dataset: "imagenette"
+  in_channels: 3
+  img_size: 224
+
+mnist:
+  dataset: "mnist"
+  in_channels: 1
+  img_size: 28
