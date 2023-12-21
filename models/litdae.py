@@ -93,9 +93,9 @@ class LitDAE(pl.LightningModule):
         ssim = self.ssim(y_hat, y)
         psnr = self.psnr(y_hat, y)
 
-        self.log("test_loss", loss, sync_dist=True, prog_bar=True)
-        self.log("ssim", ssim, sync_dist=True, prog_bar=True)
-        self.log("psnr", psnr, sync_dist=True, prog_bar=True)
+        self.log("val_loss", loss, sync_dist=True, prog_bar=True)
+        self.log("val_ssim", ssim, sync_dist=True, prog_bar=True)
+        self.log("val_psnr", psnr, sync_dist=True, prog_bar=True)
 
         return loss
 
@@ -121,8 +121,8 @@ class LitDAE(pl.LightningModule):
         psnr = self.psnr(y_hat, y)
 
         self.log("test_loss", loss, sync_dist=True, prog_bar=True)
-        self.log("ssim", ssim, sync_dist=True, prog_bar=True)
-        self.log("psnr", psnr, sync_dist=True, prog_bar=True)
+        self.log("test_ssim", ssim, sync_dist=True, prog_bar=True)
+        self.log("test_psnr", psnr, sync_dist=True, prog_bar=True)
 
     def configure_optimizers(self) -> Tuple[list, list]:
         """
