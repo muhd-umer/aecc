@@ -61,6 +61,7 @@ class ViTDecoder(nn.Module):
             p2=patch_size,
             h=img_size // patch_size,
         )
+        self.gate = nn.Sigmoid()
 
         self._init_weight()
 
@@ -90,7 +91,7 @@ class ViTDecoder(nn.Module):
         patches = self.head(features)
         img = self.patch2img(patches)
 
-        # Get the image from -1 to 1
-        img = torch.tanh(img)
+        # Gate
+        img = self.gate(img)
 
         return img
