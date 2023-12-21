@@ -18,9 +18,9 @@ from torchinfo import summary
 from torchmetrics import MeanSquaredError
 from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity
 
-from config import get_config
+from config import get_cfg, get_defaults
 from data import *
-from models import DAEViT, LitDAE
+from models import DAEViT, LitDAE, dae_resnet_models, dae_vit_models
 from utils import EMACallback, SimplifiedProgressBar
 
 # Common setup
@@ -53,81 +53,27 @@ def train(
         )
 
     # Get the data loaders
-    if cfg.dataset == "imagenette":
-        train_transform, test_transform = get_imagenette_transform(cfg)
-        (
-            train_dataloader,
-            val_dataloader,
-            test_dataloader,
-            steps_per_epoch,
-        ) = get_imagenette_loaders(
-            cfg.data_dir,
-            train_transform,
-            test_transform,
-            batch_size=cfg.batch_size,
-            num_workers=cfg.num_workers,
-            val_size=cfg.val_size,
-            noise_factor=cfg.noise_factor,
-            return_steps=True,
-        )
-    elif cfg.dataset == "mnist":
-        raise NotImplementedError("Yet to be implemented!")
-    elif cfg.dataset == "cifar10":
-        train_transform, test_transform = get_cifar10_transform(cfg)
-        (
-            train_dataloader,
-            val_dataloader,
-            test_dataloader,
-            steps_per_epoch,
-        ) = get_cifar10_loaders(
-            cfg.data_dir,
-            train_transform,
-            test_transform,
-            batch_size=cfg.batch_size,
-            num_workers=cfg.num_workers,
-            val_size=cfg.val_size,
-            noise_factor=cfg.noise_factor,
-            return_steps=True,
-        )
-    elif cfg.dataset == "cifar100":
-        train_transform, test_transform = get_cifar100_transform(cfg)
-        (
-            train_dataloader,
-            val_dataloader,
-            test_dataloader,
-            steps_per_epoch,
-        ) = get_cifar100_loaders(
-            cfg.data_dir,
-            train_transform,
-            test_transform,
-            batch_size=cfg.batch_size,
-            num_workers=cfg.num_workers,
-            val_size=cfg.val_size,
-            noise_factor=cfg.noise_factor,
-            return_steps=True,
-        )
-    else:
-        raise ValueError(
-            colored(
-                "Provide a valid dataset (imagenette, mnist, cifar100, cifar10)",
-                "red",
-            )
-        )
+    (
+        train_dataloader,
+        val_dataloader,
+        test_dataloader,
+        steps_per_epoch,
+    ) = load_dataset(cfg)
 
     # Get the model
-    # model = dae_vit_models[cfg.model_name](
-    #     in_channels=cfg.in_channels, img_size=cfg.img_size
-    # )
-    model = DAEViT(
-        in_channels=cfg.in_channels,
-        img_size=cfg.img_size,
-        patch_size=cfg.patch_size,
-        emb_dim=cfg.emb_dim,
-        encoder_layer=cfg.encoder_layer,
-        encoder_head=cfg.encoder_head,
-        decoder_layer=cfg.decoder_layer,
-        decoder_head=cfg.decoder_head,
-    )
+    if cfg.model_name in dae_vit_models:
+        model = DAEViT(
+            in_channels=cfg.in_channels,
+            img_size=cfg.img_size,
+            patch_size=cfg.patch_size,
+            emb_dim=cfg.emb_dim,
+            encoder_layer=cfg.encoder_layer,
+            encoder_head=cfg.encoder_head,
+            decoder_layer=cfg.decoder_layer,
+            decoder_head=cfg.decoder_head,
+        )
+    elif cfg.model_name in dae_resnet_models:
+        model = dae_resnet_models[cfg.model_name](in_channels=cfg.in_channels)
 
     optimizer = torch.optim.AdamW(
         model.parameters(),
@@ -245,11 +191,35 @@ def train(
 
 
 if __name__ == "__main__":
-    cfg = get_config()
+    cfg = get_defaults()
 
     # Add argument parsing with cfg overrides
     parser = argparse.ArgumentParser(
         description="Train DAE-ViT using PyTorch Lightning"
+    )
+    parser.add_argument(
+        "--model-name",
+        type=str,
+        required=True,
+        help="Name of the model (dae_vit_tiny, dae_vit_small, dae_vit_base, dae_vit_large, dae_vit_huge, dae_resnet18, dae_resnet34, dae_resnet50, dae_resnet101, dae_resnet152)",
+    )
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        required=True,
+        help="Name of the dataset (imagenette, mnist, cifar100, cifar10)",
+    )
+    parser.add_argument(
+        "--model-cfg",
+        type=str,
+        default="./config/model_cfg.yaml",
+        help="Path to the model config file",
+    )
+    parser.add_argument(
+        "--data-cfg",
+        type=str,
+        default="./config/data_cfg.yaml",
+        help="Path to the data config file",
     )
     parser.add_argument(
         "--data-dir", type=str, default=cfg.data_dir, help="Directory for the data"
@@ -336,12 +306,6 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    cfg.update(args.__dict__)
-
-    # Set mean/std to get images in [-1, 1]
-    cfg.mean = [0.5, 0.5, 0.5]
-    cfg.std = [0.5, 0.5, 0.5]
-
     if args.devices != "auto":
         args.devices = int(args.devices)
     if (args.resume or args.test_only) and args.weights is None:
@@ -352,8 +316,31 @@ if __name__ == "__main__":
             )
         )
 
+    cfg.update(args.__dict__)
+
+    if cfg.model_name not in dae_vit_models and cfg.model_name not in dae_resnet_models:
+        raise ValueError(
+            colored(
+                "Provide a valid model \n(dae_vit_tiny, dae_vit_small, dae_vit_base, "
+                + "dae_vit_large, dae_vit_huge, dae_resnet18, dae_resnet34, dae_resnet50, "
+                + "dae_resnet101, dae_resnet152)",
+                "red",
+            )
+        )
+    upd_cfg = get_cfg(
+        cfg.model_name,
+        cfg.dataset,
+        args.model_cfg,
+        args.data_cfg,
+        cfg=cfg,
+    )
+
+    # Set mean/std to get images in [-1, 1]
+    upd_cfg.mean = [0.5, 0.5, 0.5]
+    upd_cfg.std = [0.5, 0.5, 0.5]
+
     train(
-        cfg,
+        upd_cfg,
         args.accelerator,
         args.devices,
         args.rich_progress,
