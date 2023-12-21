@@ -13,8 +13,6 @@ import lightning as pl
 import lightning.pytorch.callbacks as pl_callbacks
 import matplotlib.pyplot as plt
 import torch
-import torchvision
-import torchvision.transforms.v2 as v2
 from termcolor import colored
 from torchinfo import summary
 from torchmetrics import MeanSquaredError
@@ -22,7 +20,7 @@ from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity
 
 from config import get_config
 from data import *
-from models import DAEViT, LitDAE, dae_vit_models
+from models import DAEViT, LitDAE
 from utils import EMACallback, SimplifiedProgressBar
 
 # Common setup
@@ -74,6 +72,23 @@ def train(
         )
     elif cfg.dataset == "mnist":
         raise NotImplementedError("Yet to be implemented!")
+    elif cfg.dataset == "cifar10":
+        train_transform, test_transform = get_cifar10_transform(cfg)
+        (
+            train_dataloader,
+            val_dataloader,
+            test_dataloader,
+            steps_per_epoch,
+        ) = get_cifar10_loaders(
+            cfg.data_dir,
+            train_transform,
+            test_transform,
+            batch_size=cfg.batch_size,
+            num_workers=cfg.num_workers,
+            val_size=cfg.val_size,
+            noise_factor=cfg.noise_factor,
+            return_steps=True,
+        )
     elif cfg.dataset == "cifar100":
         train_transform, test_transform = get_cifar100_transform(cfg)
         (
@@ -94,7 +109,7 @@ def train(
     else:
         raise ValueError(
             colored(
-                "Provide a valid dataset (imagenette, mnist, cifar100)",
+                "Provide a valid dataset (imagenette, mnist, cifar100, cifar10)",
                 "red",
             )
         )

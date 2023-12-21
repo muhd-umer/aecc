@@ -18,7 +18,7 @@ def get_config():
     cfg.seed = 42
 
     # Dataset
-    cfg.dataset = "cifar100"  # choose from "mnist", "cifar100", "imagenette"
+    cfg.dataset = "cifar10"  # choose from "mnist", "cifar100", "imagenette", "cifar10"
     cfg.data_dir = os.path.abspath(os.path.join(cfg.root_dir, "data"))
     cfg.batch_size = 64
     cfg.num_workers = 4
