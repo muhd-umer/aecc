@@ -16,19 +16,21 @@ class ResNetEncoder(nn.Module):
     It consists of several convolutional layers.
     """
 
-    def __init__(self, cfg, bottleneck=False):
+    def __init__(self, cfg, bottleneck=False, in_channels=3):
         """
         Initialize the ResNetEncoder.
 
         Args:
             cfg (list): A list of configurations for each layer.
             bottleneck (bool): If True, use bottleneck blocks. Otherwise, use residual blocks.
+            in_channels (int): The number of input channels.
         """
         super(ResNetEncoder, self).__init__()
 
         if len(cfg) != 4:
             raise ValueError("Only 4 layers can be configured")
 
+        self.in_channels = in_channels
         self._initialize_layers(cfg, bottleneck)
 
     def _initialize_layers(self, cfg, bottleneck):
@@ -43,7 +45,7 @@ class ResNetEncoder(nn.Module):
 
         self.conv1 = nn.Sequential(
             nn.Conv2d(
-                in_channels=3,
+                in_channels=self.in_channels,
                 out_channels=64,
                 kernel_size=7,
                 stride=2,

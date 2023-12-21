@@ -16,19 +16,21 @@ class ResNetDecoder(nn.Module):
     It consists of several convolutional layers and a final gating layer.
     """
 
-    def __init__(self, cfg, bottleneck=False):
+    def __init__(self, cfg, bottleneck=False, out_channels=3):
         """
         Initialize the ResNetDecoder.
 
         Args:
             cfg (list): A list of configurations for each layer.
             bottleneck (bool): If True, use bottleneck blocks. Otherwise, use residual blocks.
+            out_channels (int): The number of output channels.
         """
         super(ResNetDecoder, self).__init__()
 
         if len(cfg) != 4:
             raise ValueError("Only 4 layers can be configured")
 
+        self.out_channels = out_channels
         self._initialize_layers(cfg, bottleneck)
 
         self.gate = nn.Sigmoid()
@@ -73,7 +75,7 @@ class ResNetDecoder(nn.Module):
             nn.ReLU(inplace=True),
             nn.ConvTranspose2d(
                 in_channels=64,
-                out_channels=3,
+                out_channels=self.out_channels,
                 kernel_size=7,
                 stride=2,
                 padding=3,

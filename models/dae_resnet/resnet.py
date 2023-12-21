@@ -17,18 +17,23 @@ class DAEResNet(nn.Module):
     A ResNet Denoising AutoEncoder model.
     """
 
-    def __init__(self, cfg, bottleneck):
+    def __init__(self, cfg, bottleneck, in_channels=3):
         """
         Initializes the ResNet AutoEncoder model.
 
         Parameters:
         cfg (list): The configuration of the ResNet model.
         bottleneck (bool): The bottleneck flag of the ResNet model.
+        in_channels (int): The number of channels in the input image(s).
         """
         super(DAEResNet, self).__init__()
 
-        self.encoder = ResNetEncoder(cfg=cfg, bottleneck=bottleneck)
-        self.decoder = ResNetDecoder(cfg=cfg[::-1], bottleneck=bottleneck)
+        self.encoder = ResNetEncoder(
+            cfg=cfg, bottleneck=bottleneck, in_channels=in_channels
+        )
+        self.decoder = ResNetDecoder(
+            cfg=cfg[::-1], bottleneck=bottleneck, out_channels=in_channels
+        )
 
     def forward(self, x):
         """
@@ -110,35 +115,35 @@ def dae_resnet_18(**kwargs):
     """
     Constructs a ResNet-18 model.
     """
-    return DAEResNet(cfg=[2, 2, 2, 2], bottleneck=False)
+    return DAEResNet(cfg=[2, 2, 2, 2], bottleneck=False, **kwargs)
 
 
 def dae_resnet_34(**kwargs):
     """
     Constructs a ResNet-34 model.
     """
-    return DAEResNet(cfg=[3, 4, 6, 3], bottleneck=False)
+    return DAEResNet(cfg=[3, 4, 6, 3], bottleneck=False, **kwargs)
 
 
 def dae_resnet_50(**kwargs):
     """
     Constructs a ResNet-50 model.
     """
-    return DAEResNet(cfg=[3, 4, 6, 3], bottleneck=True)
+    return DAEResNet(cfg=[3, 4, 6, 3], bottleneck=True, **kwargs)
 
 
 def dae_resnet_101(**kwargs):
     """
     Constructs a ResNet-101 model.
     """
-    return DAEResNet(cfg=[3, 4, 23, 3], bottleneck=True)
+    return DAEResNet(cfg=[3, 4, 23, 3], bottleneck=True, **kwargs)
 
 
 def dae_resnet_152(**kwargs):
     """
     Constructs a ResNet-152 model.
     """
-    return DAEResNet(cfg=[3, 8, 36, 3], bottleneck=True)
+    return DAEResNet(cfg=[3, 8, 36, 3], bottleneck=True, **kwargs)
 
 
 dae_resnet_models = {
