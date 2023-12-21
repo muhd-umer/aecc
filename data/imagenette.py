@@ -142,6 +142,9 @@ def get_imagenette_transform(cfg):
     Returns:
         tuple: (train_transform, test_transform)
     """
+    if not cfg.normalize:
+        cfg.mean = [0.0, 0.0, 0.0]
+        cfg.std = [1.0, 1.0, 1.0]
 
     # Transformations
     train_transform, test_transform = (

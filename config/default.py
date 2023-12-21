@@ -35,11 +35,12 @@ def get_defaults():
     cfg.momentum = 0.9
     cfg.model_dir = os.path.abspath(os.path.join(cfg.root_dir, "weights"))
 
-    # Set data directory
+    # Data
     cfg.data_dir = os.path.abspath(os.path.join(cfg.root_dir, "data"))
     cfg.batch_size = 64
     cfg.num_workers = 4
     cfg.pin_memory = True
+    cfg.normalize = True
 
     return cfg
 
