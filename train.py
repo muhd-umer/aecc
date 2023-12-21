@@ -28,6 +28,8 @@ warnings.filterwarnings("ignore")
 torch.set_float32_matmul_precision("medium")
 plt.rcParams["font.family"] = "STIXGeneral"
 
+datasets = ["imagenette", "mnist", "cifar100", "cifar10"]  # Supported datasets
+
 
 def train(
     cfg,
@@ -39,19 +41,6 @@ def train(
     weights=None,
     logger_backend="tensorboard",
 ):
-    if logger_backend == "tensorboard":
-        logger = pl.pytorch.loggers.TensorBoardLogger(save_dir=cfg.log_dir, name=".")
-
-    elif logger_backend == "wandb":
-        logger = pl.pytorch.loggers.WandbLogger(project="aecc", save_dir=cfg.log_dir)
-    else:
-        raise ValueError(
-            colored(
-                "Provide a valid logger (tensorboard, wandb)",
-                "red",
-            )
-        )
-
     # Get the data loaders
     (
         train_dataloader,
@@ -316,9 +305,10 @@ if __name__ == "__main__":
             )
         )
 
-    cfg.update(args.__dict__)
-
-    if cfg.model_name not in dae_vit_models and cfg.model_name not in dae_resnet_models:
+    if (
+        args.model_name not in dae_vit_models
+        and args.model_name not in dae_resnet_models
+    ):
         raise ValueError(
             colored(
                 "Provide a valid model \n(dae_vit_tiny, dae_vit_small, dae_vit_base, "
@@ -327,6 +317,30 @@ if __name__ == "__main__":
                 "red",
             )
         )
+
+    if args.dataset not in datasets:
+        raise ValueError(
+            colored(
+                "Provide a valid dataset \n(imagenette, mnist, cifar100, cifar10)",
+                "red",
+            )
+        )
+
+    if args.logger_backend == "tensorboard":
+        logger = pl.pytorch.loggers.TensorBoardLogger(save_dir=cfg.log_dir, name=".")
+
+    elif args.logger_backend == "wandb":
+        logger = pl.pytorch.loggers.WandbLogger(project="aecc", save_dir=cfg.log_dir)
+    else:
+        raise ValueError(
+            colored(
+                "Provide a valid logger (tensorboard, wandb)",
+                "red",
+            )
+        )
+
+    cfg.update(args.__dict__)
+
     upd_cfg = get_cfg(
         cfg.model_name,
         cfg.dataset,
