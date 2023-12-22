@@ -238,13 +238,13 @@ class DecoderResidualLayer(nn.Module):
     This class represents a residual layer for a decoder in a ResNet architecture.
     """
 
-    def __init__(self, hidden_channels, output_channels, upsample):
+    def __init__(self, hidden_channels, inter_channels, upsample):
         """
         Initialize the DecoderResidualLayer.
 
         Args:
             hidden_channels (int): Number of hidden channels.
-            output_channels (int): Number of output channels.
+            inter_channels (int): Number of output channels.
             upsample (bool): Whether to upsample the input.
         """
         super(DecoderResidualLayer, self).__init__()
@@ -268,7 +268,7 @@ class DecoderResidualLayer(nn.Module):
                 nn.ReLU(inplace=True),
                 nn.ConvTranspose2d(
                     in_channels=hidden_channels,
-                    out_channels=output_channels,
+                    out_channels=inter_channels,
                     kernel_size=3,
                     stride=2,
                     padding=1,
@@ -282,7 +282,7 @@ class DecoderResidualLayer(nn.Module):
                 nn.ReLU(inplace=True),
                 nn.Conv2d(
                     in_channels=hidden_channels,
-                    out_channels=output_channels,
+                    out_channels=inter_channels,
                     kernel_size=3,
                     stride=1,
                     padding=1,
@@ -296,7 +296,7 @@ class DecoderResidualLayer(nn.Module):
                 nn.ReLU(inplace=True),
                 nn.ConvTranspose2d(
                     in_channels=hidden_channels,
-                    out_channels=output_channels,
+                    out_channels=inter_channels,
                     kernel_size=1,
                     stride=2,
                     output_padding=1,
@@ -334,14 +334,14 @@ class DecoderBottleneckLayer(nn.Module):
     This class represents a bottleneck layer for a decoder in a ResNet architecture.
     """
 
-    def __init__(self, in_channels, hidden_channels, down_channels, upsample):
+    def __init__(self, in_channels, hidden_channels, inter_channels, upsample):
         """
         Initialize the DecoderBottleneckLayer.
 
         Args:
             in_channels (int): Number of input channels.
             hidden_channels (int): Number of hidden channels.
-            down_channels (int): Number of downsampled channels.
+            inter_channels (int): Number of downsampled channels.
             upsample (bool): Whether to upsample the input.
         """
         super(DecoderBottleneckLayer, self).__init__()
@@ -378,7 +378,7 @@ class DecoderBottleneckLayer(nn.Module):
                 nn.ReLU(inplace=True),
                 nn.ConvTranspose2d(
                     in_channels=hidden_channels,
-                    out_channels=down_channels,
+                    out_channels=inter_channels,
                     kernel_size=1,
                     stride=2,
                     output_padding=1,
@@ -391,7 +391,7 @@ class DecoderBottleneckLayer(nn.Module):
                 nn.ReLU(inplace=True),
                 nn.Conv2d(
                     in_channels=hidden_channels,
-                    out_channels=down_channels,
+                    out_channels=inter_channels,
                     kernel_size=1,
                     stride=1,
                     padding=0,
@@ -405,21 +405,21 @@ class DecoderBottleneckLayer(nn.Module):
                 nn.ReLU(inplace=True),
                 nn.ConvTranspose2d(
                     in_channels=in_channels,
-                    out_channels=down_channels,
+                    out_channels=inter_channels,
                     kernel_size=1,
                     stride=2,
                     output_padding=1,
                     bias=False,
                 ),
             )
-        elif in_channels != down_channels:
+        elif in_channels != inter_channels:
             self.upsample = None
             self.down_scale = nn.Sequential(
                 nn.BatchNorm2d(num_features=in_channels),
                 nn.ReLU(inplace=True),
                 nn.Conv2d(
                     in_channels=in_channels,
-                    out_channels=down_channels,
+                    out_channels=inter_channels,
                     kernel_size=1,
                     stride=1,
                     padding=0,

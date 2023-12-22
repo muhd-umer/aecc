@@ -49,25 +49,25 @@ class ResNetDecoder(nn.Module):
         self.conv1 = block(
             in_channels=2048 if bottleneck else 512,
             hidden_channels=512,
-            down_channels=1024 if bottleneck else 256,
+            inter_channels=1024 if bottleneck else 256,
             layers=cfg[0],
         )
         self.conv2 = block(
             in_channels=1024 if bottleneck else 256,
             hidden_channels=256,
-            down_channels=512 if bottleneck else 128,
+            inter_channels=512 if bottleneck else 128,
             layers=cfg[1],
         )
         self.conv3 = block(
             in_channels=512 if bottleneck else 128,
             hidden_channels=128,
-            down_channels=256 if bottleneck else 64,
+            inter_channels=256 if bottleneck else 64,
             layers=cfg[2],
         )
         self.conv4 = block(
             in_channels=256 if bottleneck else 64,
             hidden_channels=64,
-            down_channels=64 if bottleneck else 64,
+            inter_channels=64 if bottleneck else 64,
             layers=cfg[3],
         )
 

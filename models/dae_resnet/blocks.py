@@ -20,7 +20,14 @@ class EncoderResidualBlock(nn.Module):
     A class used to represent the Encoder Residual Block in a neural network.
     """
 
-    def __init__(self, in_channels, hidden_channels, layers, downsample_method="conv"):
+    def __init__(
+        self,
+        in_channels,
+        hidden_channels,
+        up_channels,  # placeholder
+        layers,
+        downsample_method="conv",
+    ):
         """
         Initialize the EncoderResidualBlock.
         """
@@ -148,15 +155,15 @@ class DecoderResidualBlock(nn.Module):
     A class used to represent the Decoder Residual Block in a neural network.
     """
 
-    def __init__(self, hidden_channels, output_channels, layers):
+    def __init__(self, in_channels, hidden_channels, inter_channels, layers):
         """
         Initialize the DecoderResidualBlock.
         """
         super(DecoderResidualBlock, self).__init__()
 
-        self._add_layers(hidden_channels, output_channels, layers, DecoderResidualLayer)
+        self._add_layers(hidden_channels, inter_channels, layers, DecoderResidualLayer)
 
-    def _add_layers(self, hidden_channels, output_channels, layers, layer_type):
+    def _add_layers(self, hidden_channels, inter_channels, layers, layer_type):
         """
         Add layers to the block.
         """
@@ -164,7 +171,7 @@ class DecoderResidualBlock(nn.Module):
             upsample = True if i == layers - 1 else False
             layer = layer_type(
                 hidden_channels=hidden_channels,
-                output_channels=output_channels if upsample else hidden_channels,
+                inter_channels=inter_channels if upsample else hidden_channels,
                 upsample=upsample,
             )
             self.add_module(f"{i:02d} {layer_type.__name__}", layer)
@@ -184,18 +191,18 @@ class DecoderBottleneckBlock(nn.Module):
     A class used to represent the Decoder Bottleneck Block in a neural network.
     """
 
-    def __init__(self, in_channels, hidden_channels, down_channels, layers):
+    def __init__(self, in_channels, hidden_channels, inter_channels, layers):
         """
         Initialize the DecoderBottleneckBlock.
         """
         super(DecoderBottleneckBlock, self).__init__()
 
         self._add_layers(
-            in_channels, hidden_channels, down_channels, layers, DecoderBottleneckLayer
+            in_channels, hidden_channels, inter_channels, layers, DecoderBottleneckLayer
         )
 
     def _add_layers(
-        self, in_channels, hidden_channels, down_channels, layers, layer_type
+        self, in_channels, hidden_channels, inter_channels, layers, layer_type
     ):
         """
         Add layers to the block.
@@ -205,7 +212,7 @@ class DecoderBottleneckBlock(nn.Module):
             layer = layer_type(
                 in_channels=in_channels,
                 hidden_channels=hidden_channels,
-                down_channels=down_channels if upsample else in_channels,
+                inter_channels=inter_channels if upsample else in_channels,
                 upsample=upsample,
             )
             self.add_module(f"{i:02d} {layer_type.__name__}", layer)
