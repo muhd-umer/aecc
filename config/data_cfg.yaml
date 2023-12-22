@@ -2,18 +2,22 @@ cifar10:
   dataset: "cifar10"
   in_channels: 3
   img_size: 32
+  patch_size: 4
 
 cifar100:
   dataset: "cifar100"
   in_channels: 3
   img_size: 32
+  patch_size: 4
 
 imagenette:
   dataset: "imagenette"
   in_channels: 3
   img_size: 96
+  patch_size: 8
 
 mnist:
   dataset: "mnist"
   in_channels: 1
   img_size: 28
+  patch_size: 4

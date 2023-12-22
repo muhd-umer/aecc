@@ -1,6 +1,5 @@
 dae_vit_tiny:
   model_name: "dae_vit_tiny"
-  patch_size: 4
   emb_dim: 96
   encoder_layer: 12
   encoder_head: 3
@@ -9,7 +8,6 @@ dae_vit_tiny:
 
 dae_vit_small:
   model_name: "dae_vit_small"
-  patch_size: 4
   emb_dim: 192
   encoder_layer: 12
   encoder_head: 3
@@ -18,7 +16,6 @@ dae_vit_small:
 
 dae_vit_base:
   model_name: "dae_vit_base"
-  patch_size: 4
   emb_dim: 384
   encoder_layer: 12
   encoder_head: 6
@@ -27,7 +24,6 @@ dae_vit_base:
 
 dae_vit_large:
   model_name: "dae_vit_large"
-  patch_size: 4
   emb_dim: 768
   encoder_layer: 12
   encoder_head: 12
@@ -36,7 +32,6 @@ dae_vit_large:
 
 dae_vit_huge:
   model_name: "dae_vit_huge"
-  patch_size: 4
   emb_dim: 1024
   encoder_layer: 24
   encoder_head: 16
