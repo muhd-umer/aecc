@@ -30,6 +30,7 @@ torch.set_float32_matmul_precision("medium")
 plt.rcParams["font.family"] = "STIXGeneral"
 
 datasets = ["imagenette", "mnist", "cifar100", "cifar10"]  # Supported datasets
+normalize_settings = ["default", "norm_0to1", "norm_neg1to1"]  # Supported normalization
 
 
 def train(
@@ -50,6 +51,20 @@ def train(
         steps_per_epoch,
     ) = load_dataset(cfg)
 
+    if cfg.normalize == "default":
+        gate = nn.Identity
+    elif cfg.normalize == "norm_0to1":
+        gate = nn.Sigmoid
+    elif cfg.normalize == "norm_neg1to1":
+        gate = nn.Tanh
+    else:
+        raise ValueError(
+            colored(
+                "Provide a valid normalization \n(default, norm_0to1, norm_neg1to1)",
+                "red",
+            )
+        )
+
     # Get the model
     if cfg.model_name in dae_vit_models:
         model = DAEViT(
@@ -61,12 +76,12 @@ def train(
             encoder_head=cfg.encoder_head,
             decoder_layer=cfg.decoder_layer,
             decoder_head=cfg.decoder_head,
-            gate=nn.Sigmoid,
+            gate=gate,
         )
     elif cfg.model_name in dae_resnet_models:
         model = dae_resnet_models[cfg.model_name](
             in_channels=cfg.in_channels,
-            gate=nn.Sigmoid,
+            gate=gate,
         )
 
     optimizer = torch.optim.AdamW(
