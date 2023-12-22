@@ -112,7 +112,6 @@ python3 train.py --model-name MODEL_NAME \  # name of the model
                  --lr LR \  # learning rate
                  --val-size VAL_SIZE \  # validation size
                  --noise-factor NOISE_FACTOR \  # noise factor
-                 --loss LOSS \  # loss function (mse, lpips)
                  --rich-progress \  # use rich progress bar
                  --accelerator ACCELERATOR \  # type of accelerator
                  --devices DEVICES \  # devices to use for training

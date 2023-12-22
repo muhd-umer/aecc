@@ -14,10 +14,10 @@ import lightning.pytorch.callbacks as pl_callbacks
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
+import torchmetrics.image as tm_image
 from termcolor import colored
 from torchinfo import summary
 from torchmetrics import MeanSquaredError
-from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity
 
 from config import get_cfg, get_defaults
 from data import *
@@ -99,19 +99,7 @@ def train(
         optimizer, T_max=cfg.num_epochs, eta_min=0, last_epoch=-1
     )
 
-    if cfg.loss == "mse":
-        loss = MeanSquaredError()
-    elif cfg.loss == "lpips":
-        loss = LearnedPerceptualImagePatchSimilarity(
-            net_type="alex", normalize=True if cfg.normalize == "default" else False
-        )
-    else:
-        raise ValueError(
-            colored(
-                "Provide a valid loss (mse, lpips)",
-                "red",
-            )
-        )
+    loss = MeanSquaredError()
 
     model = LitDAE(model, cfg, optimizer, loss, lr_scheduler)
 
@@ -275,12 +263,6 @@ if __name__ == "__main__":
         help="Noise factor for the data",
     )
     parser.add_argument(
-        "--loss",
-        type=str,
-        default=cfg.loss,
-        help="Loss function for training (mse, lpips)",
-    )
-    parser.add_argument(
         "--rich-progress", action="store_true", help="Use rich progress bar"
     )
     parser.add_argument(
@@ -388,17 +370,6 @@ if __name__ == "__main__":
         raise ValueError(
             colored(
                 "Provide a valid normalization \n(default, standard, neg1to1)",
-                "red",
-            )
-        )
-
-    if upd_cfg.loss == "lpips" and upd_cfg.normalize not in [
-        "default",
-        "neg1to1",
-    ]:
-        raise ValueError(
-            colored(
-                "LPIPS loss requires the data to be normalized in the range [0, 1] or [-1, 1]",
                 "red",
             )
         )

@@ -25,7 +25,6 @@ def get_defaults():
     cfg.seed = 42
 
     # Training
-    cfg.loss = "mse"  # choose from "mse", "lpips"
     cfg.num_epochs = 1000
     cfg.val_freq = 50
     cfg.val_size = 0.1
