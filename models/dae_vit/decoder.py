@@ -32,6 +32,7 @@ class ViTDecoder(nn.Module):
         emb_dim=768,
         num_layer=12,
         num_head=12,
+        gate=nn.Sigmoid,
     ) -> None:
         """
         Initialize the ViTDecoder.
@@ -43,6 +44,7 @@ class ViTDecoder(nn.Module):
             emb_dim (int, optional): Embedding dimension.
             num_layer (int, optional): Number of transformer layers.
             num_head (int, optional): Number of transformer heads.
+            gate (nn.Module, optional): Gate function.
         """
         super().__init__()
 
@@ -61,7 +63,7 @@ class ViTDecoder(nn.Module):
             p2=patch_size,
             h=img_size // patch_size,
         )
-        self.gate = nn.Sigmoid()
+        self.gate = gate()
 
         self._init_weight()
 

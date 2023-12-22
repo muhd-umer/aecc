@@ -38,6 +38,7 @@ class DAEViT(nn.Module):
         encoder_head=12,
         decoder_layer=8,
         decoder_head=16,
+        gate=nn.Sigmoid,
     ) -> None:
         """
         Initialize the DAEViT.
@@ -69,6 +70,7 @@ class DAEViT(nn.Module):
             emb_dim,
             decoder_layer,
             decoder_head,
+            gate,
         )
 
     def forward(self, img):

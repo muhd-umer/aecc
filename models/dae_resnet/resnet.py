@@ -17,7 +17,7 @@ class DAEResNet(nn.Module):
     A ResNet Denoising AutoEncoder model.
     """
 
-    def __init__(self, cfg, bottleneck, in_channels=3):
+    def __init__(self, cfg, bottleneck, in_channels=3, gate=nn.Sigmoid):
         """
         Initializes the ResNet AutoEncoder model.
 
@@ -25,15 +25,12 @@ class DAEResNet(nn.Module):
         cfg (list): The configuration of the ResNet model.
         bottleneck (bool): The bottleneck flag of the ResNet model.
         in_channels (int): The number of channels in the input image(s).
+        gate (nn.Module): Gate function.
         """
         super(DAEResNet, self).__init__()
 
-        self.encoder = ResNetEncoder(
-            cfg=cfg, bottleneck=bottleneck, in_channels=in_channels
-        )
-        self.decoder = ResNetDecoder(
-            cfg=cfg[::-1], bottleneck=bottleneck, out_channels=in_channels
-        )
+        self.encoder = ResNetEncoder(cfg, bottleneck, in_channels)
+        self.decoder = ResNetDecoder(cfg[::-1], bottleneck, in_channels, gate)
 
     def forward(self, x):
         """
