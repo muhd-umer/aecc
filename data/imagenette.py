@@ -158,8 +158,8 @@ def get_imagenette_transform(cfg):
                     antialias=True,
                 ),
                 v2.RandomHorizontalFlip(p=0.5),
-                v2.RandomAdjustSharpness(sharpness_factor=1.5, p=0.5),
-                v2.RandomAutocontrast(p=0.25),
+                # v2.RandomAdjustSharpness(sharpness_factor=1.5, p=0.5),
+                # v2.RandomAutocontrast(p=0.25),
                 v2.ToDtype(torch.float32, scale=True),
                 v2.Normalize(mean=cfg.mean, std=cfg.std),
             ]
