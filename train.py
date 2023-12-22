@@ -96,7 +96,9 @@ def train(
     if cfg.loss == "mse":
         loss = MeanSquaredError()
     elif cfg.loss == "lpips":
-        loss = LearnedPerceptualImagePatchSimilarity(net_type="alex")
+        loss = LearnedPerceptualImagePatchSimilarity(
+            net_type="alex", normalize=True if cfg.normalize == "norm_0to1" else False
+        )
     else:
         raise ValueError(
             colored(
@@ -376,10 +378,21 @@ if __name__ == "__main__":
     )
 
     # Set cfg.normalize (default, norm_0to1, norm_neg1to1)
-    if cfg.normalize not in normalize_settings:
+    if upd_cfg.normalize not in normalize_settings:
         raise ValueError(
             colored(
                 "Provide a valid normalization \n(default, norm_0to1, norm_neg1to1)",
+                "red",
+            )
+        )
+
+    if upd_cfg.loss == "lpips" and upd_cfg.normalize not in [
+        "norm_0to1",
+        "norm_neg1to1",
+    ]:
+        raise ValueError(
+            colored(
+                "LPIPS loss requires the data to be normalized in the range [0, 1] or [-1, 1]",
                 "red",
             )
         )
