@@ -84,6 +84,12 @@ def train(
             gate=gate,
         )
 
+    # optimizer = torch.optim.SGD(
+    #     model.parameters(),
+    #     lr=cfg.lr,
+    #     momentum=cfg.momentum,
+    # )
+
     optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=cfg.lr,
