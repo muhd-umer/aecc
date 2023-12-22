@@ -172,6 +172,16 @@ def get_cifar10_dataset(
     return train_dataset, val_dataset, test_dataset
 
 
+cifar10_settings = {
+    "default": {
+        "mean": [0.4914, 0.4822, 0.4465],
+        "std": [0.2023, 0.1994, 0.2010],
+    },
+    "norm_0to1": {"mean": [0.0, 0.0, 0.0], "std": [1.0, 1.0, 1.0]},
+    "norm_neg1to1": {"mean": [0.5, 0.5, 0.5], "std": [0.5, 0.5, 0.5]},
+}
+
+
 def get_cifar10_transform(cfg):
     """
     Get CIFAR10 transforms.
@@ -182,9 +192,11 @@ def get_cifar10_transform(cfg):
     Returns:
         tuple: (train_transform, test_transform)
     """
-    if not cfg.normalize:
-        cfg.mean = [0.0, 0.0, 0.0]
-        cfg.std = [1.0, 1.0, 1.0]
+
+    cfg.mean, cfg.std = (
+        cifar10_settings[cfg.normalize]["mean"],
+        cifar10_settings[cfg.normalize]["std"],
+    )
 
     train_transform = v2.Compose(
         [

@@ -128,6 +128,16 @@ def get_imagenette_dataset(
     return train_dataset, val_dataset, test_dataset
 
 
+imagenette_settings = {
+    "default": {
+        "mean": [0.4611, 0.4401, 0.4031],
+        "std": [0.2681, 0.2610, 0.2683],
+    },
+    "norm_0to1": {"mean": [0.0, 0.0, 0.0], "std": [1.0, 1.0, 1.0]},
+    "norm_neg1to1": {"mean": [0.5, 0.5, 0.5], "std": [0.5, 0.5, 0.5]},
+}
+
+
 def get_imagenette_transform(cfg):
     """
     Returns the transformations to be applied on the training and testing datasets.
@@ -142,9 +152,10 @@ def get_imagenette_transform(cfg):
     Returns:
         tuple: (train_transform, test_transform)
     """
-    if not cfg.normalize:
-        cfg.mean = [0.0, 0.0, 0.0]
-        cfg.std = [1.0, 1.0, 1.0]
+    cfg.mean, cfg.std = (
+        imagenette_settings[cfg.normalize]["mean"],
+        imagenette_settings[cfg.normalize]["std"],
+    )
 
     # Transformations
     train_transform, test_transform = (

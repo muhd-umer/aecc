@@ -40,7 +40,7 @@ def get_defaults():
     cfg.batch_size = 64
     cfg.num_workers = 4
     cfg.pin_memory = True
-    cfg.normalize = True
+    cfg.normalize = "default"  # choose from "default", "norm_0to1", "norm_neg1to1"
 
     return cfg
 
