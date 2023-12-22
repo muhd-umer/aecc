@@ -52,9 +52,9 @@ def train(
     ) = load_dataset(cfg)
 
     if cfg.normalize == "default":
-        gate = nn.Identity
-    elif cfg.normalize == "standard":
         gate = nn.Sigmoid
+    elif cfg.normalize == "standard":
+        gate = nn.Identity
     elif cfg.normalize == "neg1to1":
         gate = nn.Tanh
     else:
@@ -97,7 +97,7 @@ def train(
         loss = MeanSquaredError()
     elif cfg.loss == "lpips":
         loss = LearnedPerceptualImagePatchSimilarity(
-            net_type="alex", normalize=True if cfg.normalize == "standard" else False
+            net_type="alex", normalize=True if cfg.normalize == "default" else False
         )
     else:
         raise ValueError(
@@ -387,7 +387,7 @@ if __name__ == "__main__":
         )
 
     if upd_cfg.loss == "lpips" and upd_cfg.normalize not in [
-        "standard",
+        "default",
         "neg1to1",
     ]:
         raise ValueError(
