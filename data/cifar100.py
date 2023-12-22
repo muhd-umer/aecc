@@ -46,18 +46,6 @@ class CIFAR100(Dataset):
 
         self.classes = self._load_meta()["fine_label_names"]
 
-    def _add_noise(self, img):
-        img_array = np.array(img)
-
-        # Generate Gaussian noise
-        noise = np.random.normal(loc=0, scale=self.noise_factor, size=img_array.shape)
-        noisy_img_array = np.clip(img_array + noise, 0, 255).astype(np.uint8)
-
-        # Convert back to Pillow image
-        noisy_img = Image.fromarray(noisy_img_array)
-
-        return noisy_img, img
-
     def __getitem__(self, index):
         """
         Args:
@@ -71,11 +59,12 @@ class CIFAR100(Dataset):
             img, _ = self.test_data[index], self.test_labels[index]
 
         img = Image.fromarray(img).convert("RGB")
-        noisy_img, img = self._add_noise(img)
 
         if self.transform is not None:
-            noisy_img = self.transform(noisy_img)
             img = self.transform(img)
+
+        noisy_img = img + self.noise_factor * torch.randn_like(img)
+        noisy_img = torch.clamp(noisy_img, 0.0, 1.0)
 
         return noisy_img, img
 
