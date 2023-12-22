@@ -13,6 +13,7 @@ import lightning as pl
 import lightning.pytorch.callbacks as pl_callbacks
 import matplotlib.pyplot as plt
 import torch
+import torch.nn as nn
 from termcolor import colored
 from torchinfo import summary
 from torchmetrics import MeanSquaredError
@@ -60,9 +61,13 @@ def train(
             encoder_head=cfg.encoder_head,
             decoder_layer=cfg.decoder_layer,
             decoder_head=cfg.decoder_head,
+            gate=nn.Sigmoid,
         )
     elif cfg.model_name in dae_resnet_models:
-        model = dae_resnet_models[cfg.model_name](in_channels=cfg.in_channels)
+        model = dae_resnet_models[cfg.model_name](
+            in_channels=cfg.in_channels,
+            gate=nn.Sigmoid,
+        )
 
     optimizer = torch.optim.AdamW(
         model.parameters(),
@@ -288,6 +293,12 @@ if __name__ == "__main__":
         help="Logger backend (tensorboard, wandb)",
     )
     parser.add_argument(
+        "--normalize",
+        type=str,
+        default=cfg.normalize,
+        help="Normalization type (default, norm_0to1, norm_neg1to1)",
+    )
+    parser.add_argument(
         "--val-freq",
         type=int,
         default=cfg.val_freq,
@@ -349,9 +360,14 @@ if __name__ == "__main__":
         cfg=cfg,
     )
 
-    # Set mean/std to get images in [-1, 1]
-    upd_cfg.mean = [0.5, 0.5, 0.5]
-    upd_cfg.std = [0.5, 0.5, 0.5]
+    # Set cfg.normalize (default, norm_0to1, norm_neg1to1)
+    if cfg.normalize not in normalize_settings:
+        raise ValueError(
+            colored(
+                "Provide a valid normalization \n(default, norm_0to1, norm_neg1to1)",
+                "red",
+            )
+        )
 
     train(
         upd_cfg,
