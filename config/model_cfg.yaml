@@ -37,18 +37,3 @@ dae_vit_huge:
   encoder_head: 16
   decoder_layer: 16
   decoder_head: 16
-
-dae_resnet_18:
-  model_name: "dae_resnet_18"
-
-dae_resnet_34:
-  model_name: "dae_resnet_34"
-
-dae_resnet_50:
-  model_name: "dae_resnet_50"
-
-dae_resnet_101:
-  model_name: "dae_resnet_101"
-
-dae_resnet_152:
-  model_name: "dae_resnet_152"
