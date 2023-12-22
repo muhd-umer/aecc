@@ -368,6 +368,7 @@ if __name__ == "__main__":
     )
 
     # Set cfg.normalize (default, standard, neg1to1)
+    # default keeps the data in [0, 1] (recommended for autoencoders)
     if upd_cfg.normalize not in normalize_settings:
         raise ValueError(
             colored(
