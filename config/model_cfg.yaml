@@ -3,39 +3,39 @@ dae_vit_tiny:
   emb_dim: 96
   encoder_layer: 12
   encoder_head: 3
-  decoder_layer: 4
-  decoder_head: 3
+  decoder_layer: 8
+  decoder_head: 6
 
 dae_vit_small:
   model_name: "dae_vit_small"
   emb_dim: 192
   encoder_layer: 12
-  encoder_head: 3
-  decoder_layer: 4
-  decoder_head: 3
+  encoder_head: 6
+  decoder_layer: 8
+  decoder_head: 8
 
 dae_vit_base:
   model_name: "dae_vit_base"
   emb_dim: 384
   encoder_layer: 12
-  encoder_head: 6
-  decoder_layer: 4
-  decoder_head: 6
+  encoder_head: 12
+  decoder_layer: 8
+  decoder_head: 16
 
 dae_vit_large:
   model_name: "dae_vit_large"
   emb_dim: 768
-  encoder_layer: 12
-  encoder_head: 12
-  decoder_layer: 4
-  decoder_head: 12
+  encoder_layer: 24
+  encoder_head: 16
+  decoder_layer: 16
+  decoder_head: 16
 
 dae_vit_huge:
   model_name: "dae_vit_huge"
   emb_dim: 1024
-  encoder_layer: 24
+  encoder_layer: 32
   encoder_head: 16
-  decoder_layer: 8
+  decoder_layer: 16
   decoder_head: 16
 
 dae_resnet_18:
