@@ -146,8 +146,9 @@ def train(
                 pl_callbacks.RichProgressBar(theme=theme),
                 pl_callbacks.ModelCheckpoint(
                     dirpath=cfg.model_dir,
-                    filename=f"{cfg.model_name}_{{epoch}}",
+                    filename=f"{cfg.model_name}_{cfg.dataset}",
                     save_on_train_epoch_end=True,
+                    enable_version_counter=False,
                 ),
                 EMACallback(decay=0.999),
                 pl_callbacks.LearningRateMonitor(logging_interval="step"),
@@ -167,8 +168,9 @@ def train(
                 SimplifiedProgressBar(),
                 pl_callbacks.ModelCheckpoint(
                     dirpath=cfg.model_dir,
-                    filename=f"{cfg.model_name}_{{epoch}}",
+                    filename=f"{cfg.model_name}_{cfg.dataset}",
                     save_on_train_epoch_end=True,
+                    enable_version_counter=False,
                 ),
                 EMACallback(decay=0.999),
                 pl_callbacks.LearningRateMonitor(logging_interval="step"),
