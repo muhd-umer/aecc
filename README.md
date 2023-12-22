@@ -120,9 +120,9 @@ python3 train.py --model-name MODEL_NAME \  # name of the model
                  --resume \  # resume training from the provided weights
                  --test-only \  # only test the model, do not train
                  --logger-backend LOGGER_BACKEND \  # logger backend (tensorboard, wandb)
+                 --normalize NORMALIZE \  # normalize the data (default, norm_0to1, norm_neg1to1)
                  --val-freq VAL_FREQ  # validate every n epochs
 ```
-
 
 ## Project Structure
 The project is structured as follows:
