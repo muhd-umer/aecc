@@ -129,12 +129,12 @@ def get_imagenette_dataset(
 
 
 imagenette_settings = {
-    "default": {
+    "standard": {
         "mean": [0.4611, 0.4401, 0.4031],
         "std": [0.2681, 0.2610, 0.2683],
     },
-    "norm_0to1": {"mean": [0.0, 0.0, 0.0], "std": [1.0, 1.0, 1.0]},
-    "norm_neg1to1": {"mean": [0.5, 0.5, 0.5], "std": [0.5, 0.5, 0.5]},
+    "default": {"mean": [0.0, 0.0, 0.0], "std": [1.0, 1.0, 1.0]},
+    "neg1to1": {"mean": [0.5, 0.5, 0.5], "std": [0.5, 0.5, 0.5]},
 }
 
 

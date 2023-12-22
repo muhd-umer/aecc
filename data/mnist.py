@@ -9,12 +9,12 @@ from termcolor import colored
 from torch.utils.data.dataset import random_split
 
 mnist_settings = {
-    "default": {
+    "standard": {
         "mean": [0.1307],
         "std": [0.3081],
     },
-    "norm_0to1": {"mean": [0.0], "std": [1.0]},
-    "norm_neg1to1": {"mean": [0.5], "std": [0.5]},
+    "standard": {"mean": [0.0], "std": [1.0]},
+    "neg1to1": {"mean": [0.5], "std": [0.5]},
 }
 
 
