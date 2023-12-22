@@ -69,7 +69,7 @@ wget -O imagenette.zip \
 unzip -q data/imagenette.zip -d data/
 ```
 
-CIFAR100 can be downloaded from [here](https://www.cs.toronto.edu/~kriz/cifar.html).
+CIFAR100 can be downloaded from [here](https://www.cs.toronto.edu/~kriz/cifar.html). CIFAR10 can also be downloaded in a similar manner.
 
 Or, you can use the following commands to download the dataset:
 
