@@ -30,7 +30,7 @@ torch.set_float32_matmul_precision("medium")
 plt.rcParams["font.family"] = "STIXGeneral"
 
 datasets = ["imagenette", "mnist", "cifar100", "cifar10"]  # Supported datasets
-normalize_settings = ["default", "norm_0to1", "norm_neg1to1"]  # Supported normalization
+normalize_settings = ["default", "standard", "neg1to1"]  # Supported normalization
 
 
 def train(
@@ -53,14 +53,14 @@ def train(
 
     if cfg.normalize == "default":
         gate = nn.Identity
-    elif cfg.normalize == "norm_0to1":
+    elif cfg.normalize == "standard":
         gate = nn.Sigmoid
-    elif cfg.normalize == "norm_neg1to1":
+    elif cfg.normalize == "neg1to1":
         gate = nn.Tanh
     else:
         raise ValueError(
             colored(
-                "Provide a valid normalization \n(default, norm_0to1, norm_neg1to1)",
+                "Provide a valid normalization \n(default, standard, neg1to1)",
                 "red",
             )
         )
@@ -97,7 +97,7 @@ def train(
         loss = MeanSquaredError()
     elif cfg.loss == "lpips":
         loss = LearnedPerceptualImagePatchSimilarity(
-            net_type="alex", normalize=True if cfg.normalize == "norm_0to1" else False
+            net_type="alex", normalize=True if cfg.normalize == "standard" else False
         )
     else:
         raise ValueError(
@@ -313,7 +313,7 @@ if __name__ == "__main__":
         "--normalize",
         type=str,
         default=cfg.normalize,
-        help="Normalization type (default, norm_0to1, norm_neg1to1)",
+        help="Normalization type (default, standard, neg1to1)",
     )
     parser.add_argument(
         "--val-freq",
@@ -377,18 +377,18 @@ if __name__ == "__main__":
         cfg=cfg,
     )
 
-    # Set cfg.normalize (default, norm_0to1, norm_neg1to1)
+    # Set cfg.normalize (default, standard, neg1to1)
     if upd_cfg.normalize not in normalize_settings:
         raise ValueError(
             colored(
-                "Provide a valid normalization \n(default, norm_0to1, norm_neg1to1)",
+                "Provide a valid normalization \n(default, standard, neg1to1)",
                 "red",
             )
         )
 
     if upd_cfg.loss == "lpips" and upd_cfg.normalize not in [
-        "norm_0to1",
-        "norm_neg1to1",
+        "standard",
+        "neg1to1",
     ]:
         raise ValueError(
             colored(
