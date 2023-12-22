@@ -14,14 +14,13 @@ import lightning.pytorch.callbacks as pl_callbacks
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
-import torchmetrics.image as tm_image
 from termcolor import colored
 from torchinfo import summary
 from torchmetrics import MeanSquaredError
 
 from config import get_cfg, get_defaults
 from data import *
-from models import DAEViT, LitDAE, dae_resnet_models, dae_vit_models
+from models import DAEViT, LitDAE, dae_vit_models
 from utils import EMACallback, SimplifiedProgressBar
 
 # Common setup
@@ -66,30 +65,19 @@ def train(
         )
 
     # Get the model
-    if cfg.model_name in dae_vit_models:
-        model = DAEViT(
-            in_channels=cfg.in_channels,
-            img_size=cfg.img_size,
-            patch_size=cfg.patch_size,
-            emb_dim=cfg.emb_dim,
-            encoder_layer=cfg.encoder_layer,
-            encoder_head=cfg.encoder_head,
-            decoder_layer=cfg.decoder_layer,
-            decoder_head=cfg.decoder_head,
-            gate=nn.Sigmoid,
-        )
-    elif cfg.model_name in dae_resnet_models:
-        model = dae_resnet_models[cfg.model_name](
-            in_channels=cfg.in_channels,
-            gate=gate,
-        )
+    model = DAEViT(
+        in_channels=cfg.in_channels,
+        img_size=cfg.img_size,
+        patch_size=cfg.patch_size,
+        emb_dim=cfg.emb_dim,
+        encoder_layer=cfg.encoder_layer,
+        encoder_head=cfg.encoder_head,
+        decoder_layer=cfg.decoder_layer,
+        decoder_head=cfg.decoder_head,
+        gate=gate,
+    )
 
-    # optimizer = torch.optim.SGD(
-    #     model.parameters(),
-    #     lr=cfg.lr,
-    #     momentum=cfg.momentum,
-    # )
-
+    # Training setup
     optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=cfg.lr,
@@ -208,7 +196,7 @@ if __name__ == "__main__":
         "--model-name",
         type=str,
         required=True,
-        help="Name of the model (dae_vit_tiny, dae_vit_small, dae_vit_base, dae_vit_large, dae_vit_huge, dae_resnet18, dae_resnet34, dae_resnet50, dae_resnet101, dae_resnet152)",
+        help="Name of the model (dae_vit_tiny, dae_vit_small, dae_vit_base, dae_vit_large, dae_vit_huge)",
     )
     parser.add_argument(
         "--dataset",
@@ -323,15 +311,11 @@ if __name__ == "__main__":
             )
         )
 
-    if (
-        args.model_name not in dae_vit_models
-        and args.model_name not in dae_resnet_models
-    ):
+    if args.model_name not in dae_vit_models:
         raise ValueError(
             colored(
                 "Provide a valid model \n(dae_vit_tiny, dae_vit_small, dae_vit_base, "
-                + "dae_vit_large, dae_vit_huge, dae_resnet18, dae_resnet34, dae_resnet50, "
-                + "dae_resnet101, dae_resnet152)",
+                + "dae_vit_large, dae_vit_huge)",
                 "red",
             )
         )
