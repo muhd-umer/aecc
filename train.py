@@ -76,7 +76,7 @@ def train(
             encoder_head=cfg.encoder_head,
             decoder_layer=cfg.decoder_layer,
             decoder_head=cfg.decoder_head,
-            gate=gate,
+            gate=nn.Sigmoid,
         )
     elif cfg.model_name in dae_resnet_models:
         model = dae_resnet_models[cfg.model_name](
@@ -158,7 +158,8 @@ def train(
                 pl_callbacks.RichProgressBar(theme=theme),
                 pl_callbacks.ModelCheckpoint(
                     dirpath=cfg.model_dir,
-                    filename=f"{cfg.model_name}_best_model",
+                    filename=f"{cfg.model_name}_{{epoch}}",
+                    save_on_train_epoch_end=True,
                 ),
                 EMACallback(decay=0.999),
                 pl_callbacks.LearningRateMonitor(logging_interval="step"),
@@ -178,7 +179,8 @@ def train(
                 SimplifiedProgressBar(),
                 pl_callbacks.ModelCheckpoint(
                     dirpath=cfg.model_dir,
-                    filename=f"{cfg.model_name}_best_model",
+                    filename=f"{cfg.model_name}_{{epoch}}",
+                    save_on_train_epoch_end=True,
                 ),
                 EMACallback(decay=0.999),
                 pl_callbacks.LearningRateMonitor(logging_interval="step"),
