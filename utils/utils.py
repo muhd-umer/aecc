@@ -1,3 +1,10 @@
+"""
+MIT License:
+Copyright (c) 2023 Muhammad Umer
+
+Utils for PyTorch Lightning
+"""
+
 import sys
 
 import numpy as np

@@ -1,3 +1,10 @@
+"""
+MIT License:
+Copyright (c) 2023 Muhammad Umer
+
+IEEE 754 Floating Point Converter
+"""
+
 import struct
 
 import numpy as np
