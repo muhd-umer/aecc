@@ -14,3 +14,6 @@ ext_modules = [
 setup(
     ext_modules=cythonize(ext_modules),
 )
+
+# Execute the following command to build the extension:
+# python setup.py build_ext --inplace
