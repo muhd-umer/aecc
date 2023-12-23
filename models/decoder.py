@@ -49,7 +49,7 @@ class ViTDecoder(nn.Module):
         super().__init__()
 
         self.pos_embedding = nn.Parameter(
-            torch.zeros((img_size // patch_size) ** 2 + 1, 1, emb_dim)
+            torch.zeros((img_size // patch_size) ** 2, 1, emb_dim)
         )
 
         self.transformer = nn.Sequential(
@@ -88,7 +88,6 @@ class ViTDecoder(nn.Module):
         features = rearrange(features, "t b c -> b t c")
         features = self.transformer(features)
         features = rearrange(features, "b t c -> t b c")
-        features = features[1:]  # remove global feature
 
         patches = self.head(features)
         img = self.patch2img(patches)

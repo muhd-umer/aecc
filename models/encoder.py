@@ -82,9 +82,9 @@ class ViTEncoder(nn.Module):
         patches = rearrange(patches, "b c h w -> (h w) b c")
         patches = patches + self.pos_embedding
 
-        patches = torch.cat(
-            [self.cls_token.expand(-1, patches.shape[1], -1), patches], dim=0
-        )
+        # patches = torch.cat(
+        #     [self.cls_token.expand(-1, patches.shape[1], -1), patches], dim=0
+        # )
         patches = rearrange(patches, "t b c -> b t c")
         features = self.layer_norm(self.transformer(patches))
         features = rearrange(features, "b t c -> t b c")
