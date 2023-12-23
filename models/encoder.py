@@ -46,7 +46,7 @@ class ViTEncoder(nn.Module):
         """
         super().__init__()
 
-        self.cls_token = nn.Parameter(torch.zeros(1, 1, emb_dim))
+        # self.cls_token = nn.Parameter(torch.zeros(1, 1, emb_dim))
         self.pos_embedding = nn.Parameter(
             torch.zeros((img_size // patch_size) ** 2, 1, emb_dim)
         )
