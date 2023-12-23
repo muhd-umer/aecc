@@ -65,7 +65,7 @@ class ViTEncoder(nn.Module):
         """
         Initialize the weights of the cls_token and pos_embedding.
         """
-        trunc_normal_(self.cls_token, std=0.02)
+        # trunc_normal_(self.cls_token, std=0.02)
         trunc_normal_(self.pos_embedding, std=0.02)
 
     def forward(self, img):
