@@ -13,6 +13,7 @@ https://arxiv.org/abs/2010.11929
 The only difference is that the decoder part is added to the model.
 """
 
+import torch
 import torch.nn as nn
 
 from .decoder import ViTDecoder
@@ -39,6 +40,7 @@ class DAEViT(nn.Module):
         decoder_layer=8,
         decoder_head=16,
         gate=nn.Sigmoid,
+        noise_factor=0.2,
     ) -> None:
         """
         Initialize the DAEViT.
@@ -52,6 +54,8 @@ class DAEViT(nn.Module):
             encoder_head (int, optional): Number of encoder transformer heads.
             decoder_layer (int, optional): Number of decoder transformer layers.
             decoder_head (int, optional): Number of decoder transformer heads.
+            gate (nn.Module, optional): Gate function for the decoder.
+            noise_factor (float, optional): Noise factor for the input image.
         """
         super().__init__()
 
@@ -73,6 +77,8 @@ class DAEViT(nn.Module):
             gate,
         )
 
+        self.noise_factor = noise_factor
+
     def forward(self, img):
         """
         Forward pass of the DAEViT.
@@ -84,6 +90,8 @@ class DAEViT(nn.Module):
             torch.Tensor: Predicted image after the forward pass.
         """
         features = self.encoder(img)
+        features += torch.randn_like(features) * self.noise_factor
+
         predicted_img = self.decoder(features)
         return predicted_img
 

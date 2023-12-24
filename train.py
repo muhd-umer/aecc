@@ -75,6 +75,7 @@ def train(
         decoder_layer=cfg.decoder_layer,
         decoder_head=cfg.decoder_head,
         gate=gate,
+        noise_factor=cfg.noise_factor,
     )
 
     # Training setup
