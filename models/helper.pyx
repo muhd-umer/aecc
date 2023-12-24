@@ -4,8 +4,7 @@
 import numpy as np
 cimport numpy as np
 
-# Function to convert binary data to a 4D numpy array
-def to_arrayC(list binary_data):
+def to_arrayC(np.ndarray binary_data):
     # Define a 4D numpy array
     cdef np.ndarray[np.int_t, ndim=4] binary_array
 
@@ -24,22 +23,18 @@ def to_arrayC(list binary_data):
     # Return the 4D numpy array
     return binary_array
 
-# Function to concatenate bits from a demodulated BPSK signal
-def concatenate_bitsC(list bpsk_demodulated):
-    # Define a 3D numpy array
-    cdef np.ndarray[object, ndim=3] received_bits
+def demodulateC(np.ndarray[np.complex64_t, ndim=4] received_signal):
+    # Perform BPSK demodulation in-place
+    np.where(np.real(received_signal) < 0, 0, 1, out=received_signal)
+    return received_signal.astype(np.int_t)
 
-    # Concatenate bits from a demodulated BPSK signal
-    received_bits = np.array(
-        [
-            [
-                [''.join(str(bit) for bit in binary_array) for binary_array in binary_row]
-                for binary_row in binary_matrix
-            ]
-            for binary_matrix in bpsk_demodulated
-        ],
-        dtype=object
-    )
+def to_binaryC(np.ndarray[np.int_t, ndim=4] binary_array):
+    # Convert 4D numpy array to binary data in-place
+    for i in range(binary_array.shape[0]):
+        for j in range(binary_array.shape[1]):
+            for k in range(binary_array.shape[2]):
+                for l in range(binary_array.shape[3]):
+                    binary_array[i][j][k][l] = str(binary_array[i][j][k][l])
 
-    # Return the 3D numpy array
-    return received_bits
+    # Return the binary data
+    return binary_array
