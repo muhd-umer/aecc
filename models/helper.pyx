@@ -33,7 +33,7 @@ def concatenate_bitsC(list bpsk_demodulated):
     received_bits = np.array(
         [
             [
-                ["".join(map(str, binary_array)) for binary_array in binary_row]
+                [''.join(str(bit) for bit in binary_array) for binary_array in binary_row]
                 for binary_row in binary_matrix
             ]
             for binary_matrix in bpsk_demodulated
