@@ -46,7 +46,7 @@ class ViTEncoder(nn.Module):
         """
         super().__init__()
 
-        # self.cls_token = nn.Parameter(torch.zeros(1, 1, emb_dim))
+        self.cls_token = nn.Parameter(torch.zeros(1, 1, emb_dim))
         self.pos_embedding = nn.Parameter(
             torch.zeros((img_size // patch_size) ** 2, 1, emb_dim)
         )
@@ -65,7 +65,7 @@ class ViTEncoder(nn.Module):
         """
         Initialize the weights of the cls_token and pos_embedding.
         """
-        # trunc_normal_(self.cls_token, std=0.02)
+        trunc_normal_(self.cls_token, std=0.02)
         trunc_normal_(self.pos_embedding, std=0.02)
 
     def forward(self, img):
@@ -82,9 +82,9 @@ class ViTEncoder(nn.Module):
         patches = rearrange(patches, "b c h w -> (h w) b c")
         patches = patches + self.pos_embedding
 
-        # patches = torch.cat(
-        #     [self.cls_token.expand(-1, patches.shape[1], -1), patches], dim=0
-        # )
+        patches = torch.cat(
+            [self.cls_token.expand(-1, patches.shape[1], -1), patches], dim=0
+        )
         patches = rearrange(patches, "t b c -> b t c")
         features = self.layer_norm(self.transformer(patches))
         features = rearrange(features, "b t c -> t b c")
