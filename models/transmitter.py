@@ -7,6 +7,8 @@ BPST Transmitter
 
 import numpy as np
 
+from .helper import *
+
 
 class BPSKTransmitter:
     """A class used to represent a BPSK Transmitter"""
@@ -31,12 +33,7 @@ class BPSKTransmitter:
             binary_array (np.array): Numpy array of binary digits.
         """
 
-        def conversion(binary_string):
-            return np.fromiter((int(bit) for bit in binary_string), dtype=np.uint8)
-
-        to_arr = np.vectorize(conversion, signature="()->(n)", otypes=[np.uint8])
-        binary_array = to_arr(binary_representation)
-        return binary_array
+        return to_arrayC(binary_representation)  # type: ignore
 
     def modulate(self, binary_array):
         """
@@ -88,14 +85,8 @@ class BPSKTransmitter:
         Returns:
             received_bits (np.array): Concatenated bits from the demodulated signal.
         """
-        received_bits = np.empty(bpsk_demodulated.shape[:-1], dtype=object)
-        for i in range(bpsk_demodulated.shape[0]):
-            for j in range(bpsk_demodulated.shape[1]):
-                for k in range(bpsk_demodulated.shape[2]):
-                    received_bits[i, j, k] = "".join(
-                        map(str, bpsk_demodulated[i, j, k, :])
-                    )
-        return received_bits
+
+        return concatenate_bitsC(bpsk_demodulated)  # type: ignore
 
     def forward(self, binary_representation):
         """
