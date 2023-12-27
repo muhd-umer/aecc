@@ -14,7 +14,7 @@ imagenette:
   dataset: "imagenette"
   in_channels: 3
   img_size: 128
-  patch_size: 8
+  patch_size: 16
 
 mnist:
   dataset: "mnist"
