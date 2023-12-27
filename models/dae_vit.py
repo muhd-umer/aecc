@@ -22,11 +22,19 @@ from .encoder import ViTEncoder
 
 class DAEViT(nn.Module):
     """
-    A ViT Denoising AutoEncoder model.
+    DAEViT is a Denoising AutoEncoder model that leverages the Vision Transformer (ViT)
+    architecture. It consists of an encoder and a decoder, both of which are based on the ViT model.
 
     Attributes:
-        encoder (ViTEncoder): Encoder part of the autoencoder.
-        decoder (ViTDecoder): Decoder part of the autoencoder.
+        encoder (ViTEncoder): The encoder part of the autoencoder. It is responsible for
+        transforming the input image into a lower-dimensional representation.
+        decoder (ViTDecoder): The decoder part of the autoencoder. It reconstructs the original image from the lower-dimensional representation produced by the encoder.
+
+    The DAEViT model is initialized with several parameters that define the structure and behavior
+    of the encoder and decoder. These parameters include the number of input channels, the size of
+    the input image, the size of the patches, the embedding dimension, the number of transformer
+    layers and heads in the encoder and decoder, the gate function for the decoder, and the noise
+    factor for the input image.
     """
 
     def __init__(
@@ -43,19 +51,21 @@ class DAEViT(nn.Module):
         noise_factor=0.2,
     ) -> None:
         """
-        Initialize the DAEViT.
+        Initializes the DAEViT model with the given parameters.
 
         Args:
-            in_channels (int, optional): Number of input channels.
-            img_size (int, optional): Size of the input image.
-            patch_size (int, optional): Size of the patches.
-            emb_dim (int, optional): Embedding dimension.
-            encoder_layer (int, optional): Number of encoder transformer layers.
-            encoder_head (int, optional): Number of encoder transformer heads.
-            decoder_layer (int, optional): Number of decoder transformer layers.
-            decoder_head (int, optional): Number of decoder transformer heads.
-            gate (nn.Module, optional): Gate function for the decoder.
-            noise_factor (float, optional): Noise factor for the input image.
+            in_channels (int, optional): The number of channels in the input image.
+            img_size (int, optional): The size (height and width) of the input image in pixels.
+            patch_size (int, optional): The size of the patches that the image is divided into for
+            the ViT model.
+            emb_dim (int, optional): The dimension of the embeddings in the ViT model.
+            encoder_layer (int, optional): The number of transformer layers in the encoder.
+            encoder_head (int, optional): The number of transformer heads in the encoder.
+            decoder_layer (int, optional): The number of transformer layers in the decoder.
+            decoder_head (int, optional): The number of transformer heads in the decoder.
+            gate (nn.Module, optional): The gate function used in the decoder.
+            noise_factor (float, optional): The factor by which the input image is noised before
+            being passed to the encoder.
         """
         super().__init__()
 
