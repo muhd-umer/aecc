@@ -4,6 +4,9 @@ Copyright (c) 2023 Muhammad Umer
 
 Training script for Pytorch models [Pytorch Lightning]
 """
+import subprocess
+
+subprocess.run(["python", "setup.py", "build_ext", "--inplace"], check=True)
 
 import argparse
 import os
