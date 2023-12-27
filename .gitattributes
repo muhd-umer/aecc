@@ -1,0 +1,2 @@
+# exclude .ipynb, linguist-vendored
+*.ipynb linguist-vendored
