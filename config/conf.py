@@ -28,7 +28,7 @@ def get_defaults():
     cfg.num_epochs = 1000
     cfg.val_freq = 50
     cfg.val_size = 0.1
-    cfg.noise_factor = 0.1
+    cfg.noise_factor = 0.3
     cfg.lr = 0.0005
     cfg.weight_decay = 0.005
     cfg.momentum = 0.9
