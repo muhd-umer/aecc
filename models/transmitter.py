@@ -60,7 +60,7 @@ class BPSKTransmitter:
             received_signal (np.array): Signal received after channel effects.
         """
 
-        return bpsk_modulated
+        raise NotImplementedError
 
     def demodulate(self, received_signal):
         """
