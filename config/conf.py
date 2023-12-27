@@ -25,10 +25,10 @@ def get_defaults():
     cfg.seed = 42
 
     # Training
-    cfg.num_epochs = 1000
-    cfg.val_freq = 50
+    cfg.num_epochs = 100
+    cfg.val_freq = 10
     cfg.val_size = 0.1
-    cfg.noise_factor = 0.3
+    cfg.noise_factor = 0.25
     cfg.lr = 0.0005
     cfg.weight_decay = 0.005
     cfg.momentum = 0.9
