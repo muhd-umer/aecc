@@ -16,6 +16,8 @@ The only difference is that the decoder part is added to the model.
 import torch
 import torch.nn as nn
 
+from utils import RayleighChannel
+
 from .decoder import ViTDecoder
 from .encoder import ViTEncoder
 
@@ -87,7 +89,7 @@ class DAEViT(nn.Module):
             gate,
         )
 
-        self.noise_factor = noise_factor
+        self.rayleigh = RayleighChannel(noise_factor)
 
     def forward(self, img):
         """
@@ -100,9 +102,9 @@ class DAEViT(nn.Module):
             torch.Tensor: Predicted image after the forward pass.
         """
         features = self.encoder(img)
-        features += torch.randn_like(features) * self.noise_factor
+        noisy_features = self.rayleigh(features)
+        predicted_img = self.decoder(noisy_features)
 
-        predicted_img = self.decoder(features)
         return predicted_img
 
 

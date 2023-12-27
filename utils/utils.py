@@ -9,6 +9,7 @@ import sys
 
 import numpy as np
 import torch
+import torch.nn as nn
 from lightning.pytorch.callbacks import TQDMProgressBar
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -75,3 +76,34 @@ def get_mean_std(loader: DataLoader):
     std = (channels_sqrd_sum / num_batches - mean**2) ** 0.5
 
     return mean, std
+
+
+class RayleighChannel(nn.Module):
+    """A class used to represent the Rayleigh Channel.
+
+    Attributes:
+        sigma (float): a scaling factor for the noise added to the input.
+    """
+
+    def __init__(self, sigma):
+        """Constructs all the necessary attributes for the Rayleigh Channel object.
+
+        Args:
+            sigma (float): a scaling factor for the noise added to the input.
+        """
+        super().__init__()
+        self.sigma = sigma
+
+    def forward(self, x):
+        """Applies the Rayleigh Channel transformation to the input tensor.
+
+        Args:
+            x (torch.Tensor): input tensor.
+
+        Returns:
+            torch.Tensor: output tensor after adding Rayleigh noise.
+        """
+        return x + self.sigma * torch.abs(
+            (torch.randn_like(x) + 1j * torch.randn_like(x))
+            / torch.sqrt(torch.tensor(2.0))
+        )
