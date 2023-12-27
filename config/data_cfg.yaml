@@ -13,8 +13,8 @@ cifar100:
 imagenette:
   dataset: "imagenette"
   in_channels: 3
-  img_size: 128
-  patch_size: 16
+  img_size: 96
+  patch_size: 12
 
 mnist:
   dataset: "mnist"
