@@ -64,9 +64,9 @@ class LitDAE(pl.LightningModule):
         Returns:
             torch.Tensor: Loss tensor.
         """
-        x, y = batch
-        y_hat = self.model(x)
-        loss = self.loss(y_hat, y)
+        _, img = batch
+        r_img = self.model(img)
+        loss = self.loss(r_img, img)
         self.log("train_loss", loss, prog_bar=True)
 
         return loss
@@ -84,13 +84,13 @@ class LitDAE(pl.LightningModule):
         Returns:
             torch.Tensor: Loss tensor.
         """
-        x, y = batch
-        y_hat = self.model(x)
+        _, img = batch
+        r_img = self.model(img)
 
         # denoising autoencoder metrics
-        loss = self.loss(y_hat, y)
-        ssim = self.ssim(y_hat, y)
-        psnr = self.psnr(y_hat, y)
+        loss = self.loss(r_img, img)
+        ssim = self.ssim(r_img, img)
+        psnr = self.psnr(r_img, img)
 
         self.log("val_loss", loss, sync_dist=True, prog_bar=True)
         self.log("val_ssim", ssim, sync_dist=True, prog_bar=True)
@@ -111,13 +111,13 @@ class LitDAE(pl.LightningModule):
         Returns:
             torch.Tensor: Loss tensor.
         """
-        x, y = batch
-        y_hat = self.model(x)
+        _, img = batch
+        r_img = self.model(img)
 
         # denoising autoencoder metrics
-        loss = self.loss(y_hat, y)
-        ssim = self.ssim(y_hat, y)
-        psnr = self.psnr(y_hat, y)
+        loss = self.loss(r_img, img)
+        ssim = self.ssim(r_img, img)
+        psnr = self.psnr(r_img, img)
 
         self.log("test_loss", loss, sync_dist=True, prog_bar=True)
         self.log("test_ssim", ssim, sync_dist=True, prog_bar=True)
