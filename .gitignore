@@ -230,4 +230,4 @@ config/config_store.txt
 *.pth
 logs/
 *.ipynb
-!resources/aecc.ipynb
+!aecc.ipynb
