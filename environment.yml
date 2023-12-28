@@ -19,3 +19,5 @@ dependencies:
     - librosa
     - scipy
     - termcolor
+    - pip:
+        - umap-learn
