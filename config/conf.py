@@ -4,6 +4,7 @@ Default configuration file for AeCC.
 
 import os
 
+import torch
 import yaml
 from box import Box
 
@@ -34,6 +35,7 @@ def get_defaults():
     cfg.momentum = 0.9
     cfg.model_dir = os.path.abspath(os.path.join(cfg.root_dir, "weights"))
     cfg.pretrained = False
+    cfg.device = "cuda" if torch.cuda.is_available() else "cpu"
 
     # Data
     cfg.data_dir = os.path.abspath(os.path.join(cfg.root_dir, "data"))
