@@ -26,7 +26,7 @@ def to_arrayC(np.ndarray binary_data):
 def demodulateC(np.ndarray[np.complex64_t, ndim=4] received_signal):
     # Perform BPSK demodulation in-place
     np.where(np.real(received_signal) < 0, 0, 1, out=received_signal)
-    return received_signal.astype(np.int_t)
+    return received_signal.astype(int)
 
 def to_binaryC(np.ndarray[np.int_t, ndim=4] binary_array):
     # Convert 4D numpy array to binary data in-place
