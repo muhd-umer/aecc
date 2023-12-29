@@ -20,4 +20,11 @@ dependencies:
     - scipy
     - termcolor
     - pip:
-        - umap-learn
+          - umap-learn
+          - einops
+          - python-box
+          - lightning
+          - rich
+          - wandb
+          - rawpy
+          - timm
