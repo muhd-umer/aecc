@@ -231,3 +231,4 @@ config/config_store.txt
 logs/
 *.ipynb
 !aecc.ipynb
+!report/main.pdf
